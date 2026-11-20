@@ -11,6 +11,7 @@
 .chatbox-form button { background: var(--ink); color: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 16px; cursor: pointer }
 
 @media (max-width: 1000px) {
+  .chat-bubble { bottom: 88px }
   .nav-links { display: none }
   .nav-order { display: none }
   .bottom-tab-bar { position: fixed; z-index: 150; left: 12px; right: 12px; bottom: 12px; height: 62px; display: flex; align-items: stretch; justify-content: space-around; background: #18231ef2; border: 1px solid #ffffff1a; border-radius: 18px; box-shadow: 0 10px 30px #18231e2e; padding: 6px; backdrop-filter: blur(12px) }
