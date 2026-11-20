@@ -12,6 +12,7 @@
 
 @media (max-width: 1000px) {
   .chat-bubble { bottom: 88px }
+  .chatbox { bottom: 148px; max-height: calc(100dvh - 164px) }
   .nav-links { display: none }
   .nav-order { display: none }
   .bottom-tab-bar { position: fixed; z-index: 150; left: 12px; right: 12px; bottom: 12px; height: 62px; display: flex; align-items: stretch; justify-content: space-around; background: #18231ef2; border: 1px solid #ffffff1a; border-radius: 18px; box-shadow: 0 10px 30px #18231e2e; padding: 6px; backdrop-filter: blur(12px) }
@@ -33,6 +34,8 @@
 }
 
 @media (max-width: 760px) {
+  .chat-bubble { right: 8px; bottom: 80px }
+  .chatbox { right: 8px; bottom: 148px; width: calc(100vw - 16px); max-height: calc(100dvh - 164px) }
   .bottom-tab-bar { left: 8px; right: 8px; bottom: 8px; height: 60px; border-radius: 16px }
   .container { padding-left: 16px; padding-right: 16px }
   .navbar { padding: 0 16px }
