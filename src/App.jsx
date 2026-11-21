@@ -16,7 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar profile={profile} />
-      {error && <p className="container page-status">Gagal memuat data: {error}</p>}
+      {error && <p className="wrapper pt-32 pb-10 text-muted">Gagal memuat data: {error}</p>}
       <Routes>
         <Route path="/" element={<HomePage profile={profile} products={products} loading={loading} />} />
         <Route path="/produk" element={<ProductsPage products={products} loading={loading} phone={phone} />} />

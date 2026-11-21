@@ -1,4 +1,64 @@
 @import "tailwindcss";
-@import "./styles/base.css";
-@import "./styles/pages.css";
-@import "./styles/responsive.css";
+
+@theme {
+  /* The layout is desktop-first: max-lg = ≤1000px (tablet), max-md = ≤760px (phone). */
+  --breakpoint-*: initial;
+  --breakpoint-md: 761px;
+  --breakpoint-lg: 1001px;
+
+  --color-ink: #18231e;
+  --color-muted: #68716b;
+  --color-cream: #f8f6f0;
+  --color-lime: #d7e96a;
+  --color-line: #e4e5dd;
+  --color-olive: #849247;
+  --color-leaf: #a8bd42;
+  --color-leaf-bright: #b4ce2d;
+  --color-mist: #e8e9e1;
+
+  --font-sans: 'DM Sans', sans-serif;
+  --font-serif: 'Playfair Display', serif;
+
+  --animate-shimmer: shimmer 1.4s ease infinite;
+
+  @keyframes shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream font-sans text-ink;
+  }
+}
+
+@layer components {
+  .wrapper {
+    @apply mx-auto max-w-[1180px] px-7 max-lg:px-5 max-md:px-4;
+  }
+
+  .eyebrow {
+    @apply mb-[21px] text-[11px] font-bold tracking-[2px] text-olive uppercase;
+  }
+
+  .display {
+    @apply mb-[25px] text-[68px] leading-[1.04] font-semibold tracking-[-3px];
+  }
+
+  .accent {
+    @apply font-serif text-leaf;
+  }
+
+  .btn {
+    @apply inline-block rounded-[25px] bg-ink px-5 py-3.5 text-[13px] text-white;
+  }
+
+  .text-link {
+    @apply border-b border-[#cdd1c6] pb-[5px] text-[13px];
+  }
+}

@@ -1,9 +1,11 @@
 import { useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../../services/api'
-import { categoryName, formatPrice } from '../../utils/formatters'
+import { formatPrice } from '../../utils/formatters'
 import { orderLink } from '../../utils/whatsapp'
-import LoadingState from '../ui/LoadingState'
+import CategoryBadge from '../ui/CategoryBadge'
+import EmptyState from '../ui/EmptyState'
+import { ProductSliderSkeleton } from '../ui/LoadingState'
 import ProductModal from '../ui/ProductModal'
 
 function shuffle(items) {
@@ -34,22 +36,22 @@ export default function ProductSlider({ products, phone, loading }) {
     trackRef.current.style.cursor = 'grab'
   }
 
-  if (loading) return <LoadingState type="slider" />
+  if (loading) return <ProductSliderSkeleton />
 
   return (
-    <section id="produk" className="slider-section container">
-      <div className="slider-heading">
+    <section id="produk" className="wrapper pb-[115px]">
+      <div className="mb-[30px] flex items-end justify-between max-md:flex-col max-md:items-start max-md:gap-[18px]">
         <div>
           <p className="eyebrow">Koleksi pilihan</p>
-          <h2>Produk <em>unggulan.</em></h2>
+          <h2 className="display m-0 text-[44px] max-md:text-[36px]">Produk <em className="accent">unggulan.</em></h2>
         </div>
         <Link className="text-link" to="/produk">Lihat semua <span>↗</span></Link>
       </div>
       {shuffled.length === 0 ? (
-        <p className="slider-empty">Tidak ada produk yang ditampilkan saat ini.</p>
+        <EmptyState>Tidak ada produk yang ditampilkan saat ini.</EmptyState>
       ) : (
         <div
-          className="slider-track"
+          className="flex cursor-grab gap-[22px] overflow-x-auto pb-3.5 select-none [scrollbar-width:thin]"
           ref={trackRef}
           onMouseDown={startDrag}
           onMouseMove={moveDrag}
@@ -62,22 +64,26 @@ export default function ProductSlider({ products, phone, loading }) {
             const order = orderLink(phone, name)
             return (
               <div
-                className="slider-card"
+                className="min-w-[270px] flex-[0_0_270px] overflow-hidden rounded-lg bg-white max-md:min-w-[min(82vw,300px)] max-md:basis-[min(82vw,300px)]"
                 key={product.idProduk}
                 onClick={() => setSelectedProduct(product)}
                 onKeyDown={(e) => e.key === 'Enter' && setSelectedProduct(product)}
                 role="button"
                 tabIndex={0}
               >
-                <div className="slider-photo">
-                  {image && <img src={image} alt={name} loading="lazy" decoding="async" draggable="false" />}
-                  <span className="product-category">{categoryName(product)}</span>
+                <div className="relative h-[190px] bg-mist max-md:h-[200px]">
+                  {image && <img className="size-full object-cover" src={image} alt={name} loading="lazy" decoding="async" draggable="false" />}
+                  <CategoryBadge product={product} />
                 </div>
-                <div className="slider-info">
-                  <h3>{name}</h3>
-                  <div className="slider-bottom">
+                <div className="px-[17px] py-[15px]">
+                  <h3 className="mb-4 text-[15px]">{name}</h3>
+                  <div className="flex items-center justify-between text-[12px]">
                     <strong>{formatPrice(product.harga)}</strong>
-                    {order && <a href={order} onClick={(e) => e.stopPropagation()}>Pesan <span>↗</span></a>}
+                    {order && (
+                      <a className="font-bold" href={order} onClick={(e) => e.stopPropagation()}>
+                        Pesan <span className="ml-1.5 text-[#9db631]">↗</span>
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>
