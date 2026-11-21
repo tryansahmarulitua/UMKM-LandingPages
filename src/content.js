@@ -1,9 +1,15 @@
 import { BadgeCheck, ChefHat, ShieldCheck } from 'lucide-react'
 
-// Shown when the API is unreachable; real values come from /public/profil.
-export const BUSINESS_NAME = 'Menu Sedap ala Bunda Riris'
-export const BUSINESS_AREA = 'Jati Sampurna, Bekasi'
-export const BUSINESS_DESCRIPTION = 'Abon, keripik, kue kering, dan camilan rumahan yang dibuat sendiri di dapur kami.'
+const BUSINESS_NAME = 'Menu Sedap ala Bunda Riris'
+const BUSINESS_AREA = 'Jati Sampurna, Bekasi'
+const BUSINESS_DESCRIPTION = 'Abon, keripik, kue kering, dan camilan rumahan yang dibuat sendiri di dapur kami.'
+
+// Business details from /public/profil, with static fallbacks while it is loading, empty, or unreachable.
+export const business = (profile) => ({
+  name: profile?.namaUMKM || BUSINESS_NAME,
+  area: profile?.alamat || BUSINESS_AREA,
+  description: profile?.deskripsi || BUSINESS_DESCRIPTION,
+})
 
 export const PRODUCTS_UNAVAILABLE = 'Produk belum bisa dimuat. Coba muat ulang halaman sebentar lagi.'
 

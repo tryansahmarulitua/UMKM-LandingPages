@@ -38,7 +38,7 @@ export default function ProductCard({ product, phone, onSelect }) {
             href={order}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Pesan ${product.namaProduk} via WhatsApp`}
+            aria-label={`Pesan ${product.namaProduk} lewat WhatsApp`}
           >
             Pesan
           </a>

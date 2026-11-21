@@ -51,13 +51,15 @@ src/
   components/
     layout/          Navbar, Footer, BottomTabBar
     sections/        bagian halaman (Hero, OrderSteps)
-    ui/              ProductGrid, ProductCard, ProductModal, EmptyState
+    ui/              ProductGrid, ProductCard, ProductModal, EmptyState, InstagramIcon
     chat/            ChatBubble
   hooks/             useLandingData (fetch produk + profil)
-  services/api.js    semua pemanggilan API
+  services/api.js    semua pemanggilan API (+ test timeout chat)
   utils/             format harga, tautan WhatsApp, validasi URL (+ test)
-  content.js         teks statis: nama usaha, fakta (Halal, NIB), langkah pemesanan
+  content.js         teks statis dan business(profile): nama, area, deskripsi dengan fallback
   index.css          Tailwind: token desain (@theme) dan class bersama
+public/.htaccess     rewrite SPA untuk hosting Apache (InfinityFree)
+vercel.json          rewrite SPA untuk Vercel
 ```
 
 ## Styling
@@ -67,7 +69,7 @@ Styling memakai Tailwind CSS v4. Warna dan font didefinisikan di `@theme` pada `
 - tanpa prefix: ponsel
 - `sm:` ≥640px, `md:` ≥768px (tablet, navbar penuh, tab bar bawah disembunyikan), `lg:` ≥1024px (PC)
 
-Ikon memakai `lucide-react`. Pola yang dipakai di banyak tempat (`wrapper`, `btn`, `btn-primary`, `btn-outline`, `skeleton`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
+Ikon memakai `lucide-react`, kecuali logo Instagram (`InstagramIcon`, SVG sendiri) karena lucide tidak menyediakan logo merek. Pola yang dipakai di banyak tempat (`wrapper`, `btn`, `btn-primary`, `btn-outline`, `skeleton`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
 
 ## Deployment
 

@@ -54,7 +54,7 @@ export default function ProductDetailPage({ products, loading, failed, phone }) 
           {product.deskripsi && <p className="mt-5 max-w-prose leading-relaxed text-muted">{product.deskripsi}</p>}
           {order && (
             <a className="btn btn-primary mt-8 w-full sm:w-auto" href={order} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="size-4" aria-hidden="true" /> Pesan via WhatsApp
+              <MessageCircle className="size-4" aria-hidden="true" /> Pesan lewat WhatsApp
             </a>
           )}
           <p className="mt-4 text-sm text-muted">Ongkos kirim dan ketersediaan dikonfirmasi lewat WhatsApp.</p>
