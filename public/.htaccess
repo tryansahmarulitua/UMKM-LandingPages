@@ -1,0 +1,12 @@
+# SPA fallback for Apache hosting (InfinityFree, PP §9): unknown paths such as /produk/3
+# are served by index.html so React Router can handle them. /api and /storage are left
+# alone in case the Laravel backend is deployed on the same domain.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_URI} !^/(api|storage)/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
