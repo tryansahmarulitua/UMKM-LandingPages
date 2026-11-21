@@ -6,6 +6,7 @@ import { waLink } from '../../utils/whatsapp'
 // Limits from Project Plan §4.5; the backend enforces them too.
 const MAX_LENGTH = 500
 const MESSAGE_GAP_MS = 3000
+const HISTORY_LIMIT = 6
 
 const aiBubble = 'max-w-[85%] self-start rounded-2xl rounded-bl-sm border border-line bg-white px-3.5 py-2.5 leading-relaxed'
 const userBubble = 'max-w-[85%] self-end rounded-2xl rounded-br-sm bg-ink px-3.5 py-2.5 leading-relaxed text-white'
@@ -45,7 +46,7 @@ export default function ChatBubble({ phone }) {
 
     const history = messages
       .filter((msg) => !msg.failed)
-      .slice(-10)
+      .slice(-HISTORY_LIMIT)
       .map(({ role, text }) => ({ role, text }))
     setInput('')
     setMessages((prev) => [...prev, { role: 'user', text }])

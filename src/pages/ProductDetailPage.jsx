@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, MessageCircle } from 'lucide-react'
 import { ProductImage } from '../components/ui/ProductCard'
 import EmptyState from '../components/ui/EmptyState'
+import { PRODUCTS_UNAVAILABLE } from '../content'
 import { categoryName, formatPrice } from '../utils/formatters'
 import { orderLink } from '../utils/whatsapp'
 
@@ -11,7 +12,7 @@ const backLink = (
   </Link>
 )
 
-export default function ProductDetailPage({ products = [], phone, loading = false }) {
+export default function ProductDetailPage({ products, loading, failed, phone }) {
   const { id } = useParams()
   const product = products.find((item) => String(item.idProduk) === id)
 
@@ -34,7 +35,7 @@ export default function ProductDetailPage({ products = [], phone, loading = fals
     return (
       <main className="wrapper space-y-6 py-8 md:py-12">
         {backLink}
-        <EmptyState>Produk tidak ditemukan.</EmptyState>
+        <EmptyState>{failed ? PRODUCTS_UNAVAILABLE : 'Produk tidak ditemukan.'}</EmptyState>
       </main>
     )
   }

@@ -5,6 +5,8 @@ export const BUSINESS_NAME = 'Menu Sedap ala Bunda Riris'
 export const BUSINESS_AREA = 'Jati Sampurna, Bekasi'
 export const BUSINESS_DESCRIPTION = 'Abon, keripik, kue kering, dan camilan rumahan yang dibuat sendiri di dapur kami.'
 
+export const PRODUCTS_UNAVAILABLE = 'Produk belum bisa dimuat. Coba muat ulang halaman sebentar lagi.'
+
 export const NAV_ITEMS = [
   { to: '/', label: 'Beranda' },
   { to: '/produk', label: 'Katalog' },

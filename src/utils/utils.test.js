@@ -9,8 +9,15 @@ describe('waLink', () => {
   })
 
   it('omits the text param when there is no message', () => {
-    expect(waLink('0812')).toBe('https://wa.me/0812')
+    expect(waLink('6281234500000')).toBe('https://wa.me/6281234500000')
   })
+
+  it.each(['081234500000', '0812-3450-0000', '+62 812 3450 0000', '6281234500000'])(
+    'turns %s into an international number',
+    (phone) => {
+      expect(waLink(phone)).toBe('https://wa.me/6281234500000')
+    },
+  )
 
   it('returns null without a usable number so no dummy link is rendered', () => {
     expect(waLink(undefined)).toBeNull()
@@ -21,7 +28,7 @@ describe('waLink', () => {
 
 describe('orderLink', () => {
   it('prefills the order message with the product name', () => {
-    expect(orderLink('0812', 'Abon Sapi')).toBe('https://wa.me/0812?text=Halo%2C%20saya%20ingin%20memesan%20Abon%20Sapi')
+    expect(orderLink('0812', 'Abon Sapi')).toBe('https://wa.me/62812?text=Halo%2C%20saya%20ingin%20memesan%20Abon%20Sapi')
   })
 
   it('returns null without a number', () => {
@@ -38,7 +45,7 @@ describe('httpUrl', () => {
     expect(httpUrl('  https://contoh.id  ')).toBe('https://contoh.id')
   })
 
-  it.each(['javascript:alert(1)', ' javascript:alert(1)', 'data:text/html,x', 'instagram.com/x', '', null, undefined])(
+  it.each(['javascript:alert(1)', ' javascript:alert(1)', 'data:text/html,x', 'instagram.com/x', 'https://', 'https://exa mple.com', 'https://localhost', '', null, undefined])(
     'rejects %s',
     (url) => {
       expect(httpUrl(url)).toBeNull()

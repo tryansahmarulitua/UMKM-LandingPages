@@ -2,10 +2,11 @@ import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import EmptyState from '../components/ui/EmptyState'
 import ProductGrid, { ProductGridSkeleton } from '../components/ui/ProductGrid'
+import { PRODUCTS_UNAVAILABLE } from '../content'
 
 const ALL = 'Semua'
 
-export default function ProductsPage({ products = [], phone, loading = false }) {
+export default function ProductsPage({ products, loading, failed, phone }) {
   const [category, setCategory] = useState(ALL)
   const [query, setQuery] = useState('')
 
@@ -52,7 +53,7 @@ export default function ProductsPage({ products = [], phone, loading = false }) 
           ? <ProductGridSkeleton />
           : filteredProducts.length > 0
             ? <ProductGrid products={filteredProducts} phone={phone} />
-            : <EmptyState>{products.length ? 'Tidak ada produk yang cocok dengan pencarianmu.' : 'Belum ada produk yang ditampilkan.'}</EmptyState>}
+            : <EmptyState>{failed ? PRODUCTS_UNAVAILABLE : products.length ? 'Tidak ada produk yang cocok dengan pencarianmu.' : 'Belum ada produk yang ditampilkan.'}</EmptyState>}
       </div>
     </main>
   )

@@ -12,23 +12,26 @@ import { useLandingData } from './hooks/useLandingData'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // Braces matter: newer Chromium returns a Promise from scrollTo, and React would treat it as the cleanup.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
   return null
 }
 
 export default function App() {
-  const { products, profile, loading, error } = useLandingData()
+  const { products, profile, loading, failed } = useLandingData()
   const phone = profile?.noTelepon
 
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Navbar profile={profile} />
-      {error && <p className="wrapper mt-6 rounded-xl border border-brand/30 bg-brand-soft px-4 py-3 text-sm" role="alert">Data belum bisa dimuat. Coba muat ulang halaman sebentar lagi.</p>}
+      {failed.profile && <p className="wrapper mt-6 rounded-xl border border-brand/30 bg-brand-soft px-4 py-3 text-sm" role="alert">Kontak usaha belum bisa dimuat. Coba muat ulang halaman sebentar lagi.</p>}
       <Routes>
-        <Route path="/" element={<HomePage profile={profile} products={products} loading={loading} phone={phone} />} />
-        <Route path="/produk" element={<ProductsPage products={products} loading={loading} phone={phone} />} />
-        <Route path="/produk/:id" element={<ProductDetailPage products={products} phone={phone} loading={loading} />} />
+        <Route path="/" element={<HomePage profile={profile} products={products} loading={loading} failed={failed.products} phone={phone} />} />
+        <Route path="/produk" element={<ProductsPage products={products} loading={loading} failed={failed.products} phone={phone} />} />
+        <Route path="/produk/:id" element={<ProductDetailPage products={products} loading={loading} failed={failed.products} phone={phone} />} />
         <Route path="/tentang" element={<AboutPage profile={profile} />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
