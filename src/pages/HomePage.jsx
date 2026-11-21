@@ -8,7 +8,7 @@ import { PRODUCTS_UNAVAILABLE } from '../content'
 
 const FEATURED_COUNT = 8
 
-export default function HomePage({ profile, products, loading, failed, phone }) {
+export default function HomePage({ profile, products, loading, failed }) {
   return (
     <main>
       <HeroSection profile={profile} loading={loading} />
@@ -22,7 +22,7 @@ export default function HomePage({ profile, products, loading, failed, phone }) 
         {loading
           ? <ProductGridSkeleton count={4} />
           : products.length > 0
-            ? <ProductGrid products={products.slice(0, FEATURED_COUNT)} phone={phone} />
+            ? <ProductGrid products={products.slice(0, FEATURED_COUNT)} />
             : <EmptyState>{failed ? PRODUCTS_UNAVAILABLE : 'Belum ada produk yang ditampilkan.'}</EmptyState>}
       </section>
       <OrderSteps />

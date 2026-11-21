@@ -7,5 +7,3 @@ export function waLink(phone, message = '') {
 }
 
 export const askLink = (phone) => waLink(phone, 'Halo, saya ingin bertanya tentang produk')
-
-export const orderLink = (phone, productName) => waLink(phone, `Halo, saya ingin memesan ${productName}`)

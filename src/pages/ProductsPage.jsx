@@ -6,7 +6,7 @@ import { PRODUCTS_UNAVAILABLE } from '../content'
 
 const ALL = 'Semua'
 
-export default function ProductsPage({ products, loading, failed, phone }) {
+export default function ProductsPage({ products, loading, failed }) {
   const [category, setCategory] = useState(ALL)
   const [query, setQuery] = useState('')
 
@@ -19,7 +19,7 @@ export default function ProductsPage({ products, loading, failed, phone }) {
   return (
     <main className="wrapper py-8 md:py-12">
       <h1 className="text-3xl font-bold tracking-tight">Katalog</h1>
-      <p className="mt-2 text-muted">Pilih produk, lalu pesan langsung lewat WhatsApp.</p>
+      <p className="mt-2 text-muted">Masukkan produk ke keranjang, lalu checkout tanpa perlu membuat akun.</p>
 
       <div className="mt-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Filter kategori">
@@ -52,7 +52,7 @@ export default function ProductsPage({ products, loading, failed, phone }) {
         {loading
           ? <ProductGridSkeleton />
           : filteredProducts.length > 0
-            ? <ProductGrid products={filteredProducts} phone={phone} />
+            ? <ProductGrid products={filteredProducts} />
             : <EmptyState>{failed ? PRODUCTS_UNAVAILABLE : products.length ? 'Tidak ada produk yang cocok dengan pencarianmu.' : 'Belum ada produk yang ditampilkan.'}</EmptyState>}
       </div>
     </main>

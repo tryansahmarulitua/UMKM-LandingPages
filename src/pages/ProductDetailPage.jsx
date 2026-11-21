@@ -1,11 +1,11 @@
 import { Link, useParams } from 'react-router-dom'
-import { ArrowLeft, MessageCircle } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { ProductImage } from '../components/ui/ProductCard'
 import EmptyState from '../components/ui/EmptyState'
 import { PRODUCTS_UNAVAILABLE } from '../content'
 import { categoryName, formatPrice } from '../utils/formatters'
 import FlavourTags from '../components/ui/FlavourTags'
-import { orderLink } from '../utils/whatsapp'
+import AddToCartButton from '../components/ui/AddToCartButton'
 
 const backLink = (
   <Link className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink" to="/produk">
@@ -13,7 +13,7 @@ const backLink = (
   </Link>
 )
 
-export default function ProductDetailPage({ products, loading, failed, phone }) {
+export default function ProductDetailPage({ products, loading, failed }) {
   const { id } = useParams()
   const product = products.find((item) => String(item.idProduk) === id)
 
@@ -41,8 +41,6 @@ export default function ProductDetailPage({ products, loading, failed, phone }) 
     )
   }
 
-  const order = orderLink(phone, product.namaProduk)
-
   return (
     <main className="wrapper py-8 md:py-12">
       {backLink}
@@ -54,12 +52,11 @@ export default function ProductDetailPage({ products, loading, failed, phone }) 
           <p className="mt-3 text-2xl font-bold">{formatPrice(product.harga)}</p>
           <FlavourTags product={product} className="mt-3" />
           {product.deskripsi && <p className="mt-5 max-w-prose leading-relaxed text-muted">{product.deskripsi}</p>}
-          {order && (
-            <a className="btn btn-primary mt-8 w-full sm:w-auto" href={order} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="size-4" aria-hidden="true" /> Pesan lewat WhatsApp
-            </a>
-          )}
-          <p className="mt-4 text-sm text-muted">Ongkos kirim dan ketersediaan dikonfirmasi lewat WhatsApp.</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <AddToCartButton product={product} label="Tambah ke keranjang" className="btn btn-primary" />
+            <Link className="btn btn-outline" to="/keranjang">Lihat keranjang</Link>
+          </div>
+          <p className="mt-4 text-sm text-muted">Pembayaran lewat transfer. Ongkos kirim dikonfirmasi lewat WhatsApp setelah checkout.</p>
         </div>
       </article>
     </main>

@@ -3,6 +3,7 @@ import { MessageCircle, SendHorizontal, X } from 'lucide-react'
 import { sendChat } from '../../services/api'
 import { askLink } from '../../utils/whatsapp'
 import ChatProductCard from './ChatProductCard'
+import Turnstile from '../ui/Turnstile'
 
 // Limits from Project Plan §4.5; the backend enforces them too.
 const MAX_LENGTH = 500
@@ -20,6 +21,10 @@ export default function ChatBubble({ phone }) {
   const [messages, setMessages] = useState([WELCOME])
   const [loading, setLoading] = useState(false)
   const [coolingDown, setCoolingDown] = useState(false)
+  // Turnstile once when the chat is first used; the API then gives a one-hour ticket (memory only).
+  const [tiket, setTiket] = useState(null)
+  const [token, setToken] = useState(null)
+  const [widgetKey, setWidgetKey] = useState(0)
   const bodyRef = useRef(null)
   const inputRef = useRef(null)
   const cooldownTimer = useRef(null)
@@ -43,7 +48,7 @@ export default function ChatBubble({ phone }) {
   async function send(event) {
     event.preventDefault()
     const text = input.trim().slice(0, MAX_LENGTH)
-    if (!text || loading || coolingDown) return
+    if (!text || loading || coolingDown || (!tiket && !token)) return
 
     const history = messages
       .filter((msg) => !msg.failed)
@@ -53,8 +58,13 @@ export default function ChatBubble({ phone }) {
     setMessages((prev) => [...prev, { role: 'user', text }])
     setLoading(true)
     startCooldown()
+    const verifikasi = tiket ? { tiket } : { turnstile: token }
+    if (!tiket) setToken(null) // a Turnstile token works only once
     try {
-      const { ok, data } = await sendChat(text, history)
+      const { ok, data } = await sendChat(text, history, verifikasi)
+      if (data.tiket) setTiket(data.tiket)
+      if (data.perluVerifikasi) setTiket(null)
+      if (!data.tiket && !tiket) setWidgetKey((k) => k + 1)
       setMessages((prev) => [...prev, ok
         ? { role: 'model', text: data.answer, products: data.produk || [] }
         : { role: 'model', text: data.message || 'Maaf, asisten sedang tidak bisa menjawab.', failed: true }])
@@ -63,6 +73,7 @@ export default function ChatBubble({ phone }) {
         ? 'Asisten terlalu lama menjawab. Coba lagi sebentar lagi, atau tanya langsung lewat WhatsApp.'
         : 'Gagal menghubungi asisten.'
       setMessages((prev) => [...prev, { role: 'model', text: reply, failed: true }])
+      if (!tiket) setWidgetKey((k) => k + 1)
     } finally {
       setLoading(false)
     }
@@ -111,6 +122,12 @@ export default function ChatBubble({ phone }) {
             ))}
             {loading && <div className={`${aiBubble} text-muted`}>Mengetik…</div>}
           </div>
+          {!tiket && (
+            <div className="border-t border-line bg-white px-3 pt-3">
+              <p className="mb-2 text-xs text-muted">Verifikasi singkat sebelum mulai chat.</p>
+              <Turnstile key={widgetKey} onToken={setToken} />
+            </div>
+          )}
           <form className="flex gap-2 border-t border-line bg-white p-3" onSubmit={send}>
             <input
               ref={inputRef}
@@ -126,7 +143,7 @@ export default function ChatBubble({ phone }) {
               className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
               type="submit"
               aria-label="Kirim"
-              disabled={loading || coolingDown || !input.trim()}
+              disabled={loading || coolingDown || !input.trim() || (!tiket && !token)}
             >
               <SendHorizontal className="size-5" aria-hidden="true" />
             </button>

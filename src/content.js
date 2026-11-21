@@ -26,9 +26,9 @@ export const FACTS = [
   { icon: ChefHat, label: 'Dibuat di dapur rumahan' },
 ]
 
-// Mirrors the manual ordering flow in Project Plan §1.1; update when online checkout ships.
+// Ordering flow from Project Plan §1.1.
 export const ORDER_STEPS = [
-  { title: 'Pilih produk', text: 'Lihat katalog dan pilih camilan yang kamu mau.' },
-  { title: 'Pesan lewat WhatsApp', text: 'Tekan tombol Pesan. WhatsApp terbuka dengan pesan yang sudah terisi.' },
-  { title: 'Bayar dan terima', text: 'Bayar lewat transfer, lalu ambil sendiri atau dikirim. Ongkir dikonfirmasi di WhatsApp.' },
+  { title: 'Masukkan ke keranjang', text: 'Pilih camilan di katalog, lalu tekan + Keranjang.' },
+  { title: 'Checkout tanpa akun', text: 'Isi nama, nomor WhatsApp, dan pilih ambil sendiri atau dikirim. Kamu dapat nomor pesanan.' },
+  { title: 'Transfer dan kirim bukti', text: 'Transfer sesuai total, lalu kirim bukti lewat WhatsApp. Ongkir dikonfirmasi di sana.' },
 ]
