@@ -8,8 +8,8 @@ const MAX_LENGTH = 500
 const MESSAGE_GAP_MS = 3000
 const HISTORY_LIMIT = 6
 
-const aiBubble = 'max-w-[85%] self-start rounded-2xl rounded-bl-sm border border-line bg-white px-3.5 py-2.5 leading-relaxed'
-const userBubble = 'max-w-[85%] self-end rounded-2xl rounded-br-sm bg-ink px-3.5 py-2.5 leading-relaxed text-white'
+const aiBubble = 'max-w-[85%] self-start rounded-2xl rounded-bl-sm border border-line bg-white px-3.5 py-2.5 leading-relaxed whitespace-pre-line break-words'
+const userBubble = 'max-w-[85%] self-end rounded-2xl rounded-br-sm bg-ink px-3.5 py-2.5 leading-relaxed whitespace-pre-line break-words text-white'
 
 const WELCOME = { role: 'model', text: 'Halo! Ada yang bisa kami bantu seputar produk, harga, atau cara pesan?' }
 
