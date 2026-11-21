@@ -21,6 +21,7 @@ npm run dev
 | ----------------- | ------------------------------ |
 | `npm run dev`     | Server pengembangan Vite       |
 | `npm run lint`    | ESLint                         |
+| `npm test`        | Unit test util (Vitest)        |
 | `npm run build`   | Build produksi ke `dist/`      |
 | `npm run preview` | Menjalankan hasil build lokal  |
 
@@ -54,6 +55,19 @@ src/
     chat/            ChatBubble
   hooks/             useLandingData (fetch produk + profil)
   services/api.js    semua pemanggilan API
-  utils/             format harga, tautan WhatsApp
-  styles/            base, pages, responsive (diimpor dari index.css)
+  utils/             format harga, tautan WhatsApp, validasi URL (+ test)
+  index.css          Tailwind: token desain (@theme) dan class bersama
 ```
+
+## Styling
+
+Styling memakai Tailwind CSS v4. Warna, font, dan breakpoint didefinisikan di `@theme` pada `src/index.css`. Layout ditulis desktop-first:
+
+- `max-lg:` berlaku untuk layar ≤1000px (tablet)
+- `max-md:` berlaku untuk layar ≤760px (ponsel)
+
+Pola yang dipakai di banyak tempat (`wrapper`, `eyebrow`, `display`, `accent`, `btn`, `text-link`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
+
+## Deployment
+
+`npm run build` menghasilkan `dist/`. Folder itu bisa diunggah ke hosting Apache (InfinityFree, PP §9): `public/.htaccess` ikut tersalin dan mengarahkan route seperti `/produk/3` ke `index.html`. `vercel.json` melakukan hal yang sama bila deploy ke Vercel.
