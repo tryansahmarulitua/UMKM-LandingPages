@@ -1,10 +1,9 @@
+import { Link } from 'react-router-dom'
+import { Mail, MessageCircle } from 'lucide-react'
+import { BUSINESS_AREA, BUSINESS_NAME, NAV_ITEMS } from '../../content'
+import { httpUrl, socialLabel } from '../../utils/url'
 import { waLink } from '../../utils/whatsapp'
-import { BUSINESS_NAME } from '../../utils/formatters'
-import { httpUrl } from '../../utils/url'
-import Brand from './Brand'
-
-const column = 'flex flex-col gap-[13px] text-[12px] text-[#aeb5af] max-md:min-w-0 max-md:gap-2'
-const columnLink = 'max-lg:text-[13px] max-md:text-[12px] max-md:wrap-anywhere'
+import InstagramIcon from '../ui/InstagramIcon'
 
 export default function Footer({ profile }) {
   const name = profile?.namaUMKM || BUSINESS_NAME
@@ -14,29 +13,49 @@ export default function Footer({ profile }) {
   const socials = httpUrl(profile?.mediaSosial)
 
   return (
-    <footer id="kontak" className="bg-ink pt-[55px] pb-[25px] text-white max-lg:pt-12 max-lg:pb-[88px] max-md:pt-[42px] max-md:pb-24">
-      <div className="wrapper flex justify-between max-lg:gap-x-8 max-lg:gap-y-6 max-md:grid max-md:grid-cols-2 max-md:gap-x-[18px] max-md:gap-y-7">
-        <div className="max-md:col-span-full">
-          <Brand name={name} className="text-white max-md:text-[18px]" />
-          <p className="mt-5 text-[12px] leading-[1.7] text-[#9aa39b]">
-            Rasa baik, dari hati.<br />Mendukung UMKM lokal tumbuh bersama.
-          </p>
+    <footer className="bg-ink pb-16 text-sm text-white/70 md:pb-0">
+      <div className="wrapper grid gap-8 py-10 md:grid-cols-[1.5fr_1fr_1fr]">
+        <div>
+          <p className="text-lg font-bold text-white">{name}</p>
+          <p className="mt-2 max-w-xs">Camilan rumahan dari {profile?.alamat || BUSINESS_AREA}.</p>
         </div>
-        <div className={column}>
-          <strong className="mb-1 text-white">Hubungi kami</strong>
-          {wa && <a className={columnLink} href={wa}>{phone}</a>}
-          {email && <a className={columnLink} href={`mailto:${email}`}>{email}</a>}
+        <div>
+          <h2 className="font-semibold text-white">Kontak</h2>
+          <ul className="mt-3 space-y-2">
+            {wa && (
+              <li>
+                <a className="inline-flex items-center gap-2 hover:text-white" href={wa} target="_blank" rel="noopener noreferrer">
+                  <MessageCircle className="size-4" aria-hidden="true" /> {phone}
+                </a>
+              </li>
+            )}
+            {email && (
+              <li>
+                <a className="inline-flex items-center gap-2 break-all hover:text-white" href={`mailto:${email}`}>
+                  <Mail className="size-4 shrink-0" aria-hidden="true" /> {email}
+                </a>
+              </li>
+            )}
+            {socials && (
+              <li>
+                <a className="inline-flex items-center gap-2 hover:text-white" href={socials} target="_blank" rel="noopener noreferrer">
+                  <InstagramIcon className="size-4" /> {socialLabel(socials)}
+                </a>
+              </li>
+            )}
+          </ul>
         </div>
-        {socials && (
-          <div className={column}>
-            <strong className="mb-1 text-white">Ikuti kami</strong>
-            <a className={columnLink} href={socials} target="_blank" rel="noreferrer">{socials} ↗</a>
-          </div>
-        )}
+        <div>
+          <h2 className="font-semibold text-white">Menu</h2>
+          <ul className="mt-3 space-y-2">
+            {NAV_ITEMS.map(({ to, label }) => (
+              <li key={to}><Link className="hover:text-white" to={to}>{label}</Link></li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div className="wrapper mt-[52px] flex justify-between border-t border-[#35403a] pt-[18px] text-[10px] text-[#7c877f] max-md:mt-8 max-md:flex-col max-md:items-start max-md:gap-2 max-md:leading-[1.5]">
-        <span>© {new Date().getFullYear()} {name}. Dibuat dengan hati.</span>
-        <span>Indonesia</span>
+      <div className="border-t border-white/10">
+        <p className="wrapper py-5 text-xs text-white/50">© {new Date().getFullYear()} {name}</p>
       </div>
     </footer>
   )

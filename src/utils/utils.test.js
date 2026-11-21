@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { categoryName, formatPrice } from './formatters'
-import { httpUrl } from './url'
+import { httpUrl, socialLabel } from './url'
 import { orderLink, waLink } from './whatsapp'
 
 describe('waLink', () => {
@@ -54,5 +54,15 @@ describe('formatters', () => {
   it('falls back to a generic category name', () => {
     expect(categoryName({ kategori: { namaKategori: 'Abon' } })).toBe('Abon')
     expect(categoryName({ kategori: null })).toBe('Produk')
+  })
+})
+
+describe('socialLabel', () => {
+  it('shows an Instagram handle', () => {
+    expect(socialLabel('https://www.instagram.com/bundariris_17new/')).toBe('@bundariris_17new')
+  })
+
+  it('falls back to the domain for other sites', () => {
+    expect(socialLabel('https://tiktok.com/@bundariris')).toBe('tiktok.com')
   })
 })

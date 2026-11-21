@@ -1,38 +1,55 @@
-import { assetUrl } from '../../services/api'
-import { BUSINESS_NAME, categoryName, formatPrice } from '../../utils/formatters'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { MessageCircle, X } from 'lucide-react'
+import { categoryName, formatPrice } from '../../utils/formatters'
 import { orderLink } from '../../utils/whatsapp'
+import { ProductImage } from './ProductCard'
 
 export default function ProductModal({ product, phone, onClose }) {
+  useEffect(() => {
+    if (!product) return
+    const closeOnEscape = (event) => event.key === 'Escape' && onClose()
+    window.addEventListener('keydown', closeOnEscape)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape)
+      document.body.style.overflow = ''
+    }
+  }, [product, onClose])
+
   if (!product) return null
-  const name = product.namaProduk
-  const image = assetUrl(product.foto)
-  const order = orderLink(phone, name)
+  const order = orderLink(phone, product.namaProduk)
 
   return (
-    <div className="fixed inset-0 z-200 grid place-items-center bg-[#18231e99] p-5" onClick={onClose}>
+    <div className="fixed inset-0 z-60 flex items-end justify-center bg-ink/50 sm:items-center sm:p-6" onClick={onClose}>
       <article
-        className="relative grid max-h-[90vh] w-[min(760px,100%)] grid-cols-2 overflow-auto rounded-xl bg-white max-md:max-h-[92vh] max-md:grid-cols-1"
+        className="relative max-h-[90dvh] w-full overflow-y-auto rounded-t-2xl bg-white sm:grid sm:max-w-3xl sm:grid-cols-2 sm:rounded-2xl"
         role="dialog"
         aria-modal="true"
-        aria-label={name}
+        aria-label={product.namaProduk}
         onClick={(event) => event.stopPropagation()}
       >
         <button
-          className="absolute top-3.5 right-3.5 z-1 size-9 cursor-pointer rounded-full bg-white text-[25px]"
+          className="absolute top-3 right-3 z-10 grid size-9 cursor-pointer place-items-center rounded-full bg-white/90 shadow-sm"
           onClick={onClose}
           aria-label="Tutup"
         >
-          ×
+          <X className="size-5" aria-hidden="true" />
         </button>
-        <div className="min-h-[340px] bg-mist max-md:max-h-[300px] max-md:min-h-[230px]">
-          {image && <img className="size-full object-cover" src={image} alt={name} />}
-        </div>
-        <div className="flex flex-col items-start px-9 py-11 max-md:px-[22px] max-md:pt-7 max-md:pb-[30px]">
-          <p className="eyebrow">{categoryName(product)}</p>
-          <h2 className="display mb-[18px] text-[38px] tracking-[-1px] max-md:text-[32px]">{name}</h2>
-          <p className="leading-[1.7] text-muted">{product.deskripsi || `Produk pilihan ${BUSINESS_NAME}.`}</p>
-          <strong className="my-5 text-[20px]">{formatPrice(product.harga)}</strong>
-          {order && <a className="btn" href={order}>Pesan sekarang <span>↗</span></a>}
+        <ProductImage product={product} />
+        <div className="flex flex-col p-5 sm:p-8">
+          <p className="text-sm text-muted">{categoryName(product)}</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight">{product.namaProduk}</h2>
+          <p className="mt-2 text-xl font-bold">{formatPrice(product.harga)}</p>
+          {product.deskripsi && <p className="mt-4 leading-relaxed text-muted">{product.deskripsi}</p>}
+          <div className="mt-6 flex flex-col gap-3 sm:mt-auto sm:pt-6">
+            {order && (
+              <a className="btn btn-primary" href={order} target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="size-4" aria-hidden="true" /> Pesan via WhatsApp
+              </a>
+            )}
+            <Link className="btn btn-outline" to={`/produk/${product.idProduk}`}>Lihat detail produk</Link>
+          </div>
         </div>
       </article>
     </div>

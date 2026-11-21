@@ -1,44 +1,63 @@
+import { Mail, MapPin, MessageCircle } from 'lucide-react'
+import OrderSteps from '../components/sections/OrderSteps'
+import InstagramIcon from '../components/ui/InstagramIcon'
 import { assetUrl } from '../services/api'
-import { BUSINESS_NAME } from '../utils/formatters'
-import { httpUrl } from '../utils/url'
+import { BUSINESS_AREA, BUSINESS_DESCRIPTION, BUSINESS_NAME, FACTS } from '../content'
+import { httpUrl, socialLabel } from '../utils/url'
 import { waLink } from '../utils/whatsapp'
-
-const bodyText = 'max-w-[620px] leading-[1.8] text-muted'
 
 export default function AboutPage({ profile }) {
   const name = profile?.namaUMKM || BUSINESS_NAME
-  const description = profile?.deskripsi || 'Kami hadir untuk memperkenalkan kekayaan rasa dan kreativitas UMKM lokal.'
   const phone = profile?.noTelepon
   const wa = waLink(phone, `Halo ${name}, saya ingin bertanya`)
   const email = profile?.email
   const socials = httpUrl(profile?.mediaSosial)
-  const coverImg = assetUrl(profile?.foto)
+  const image = assetUrl(profile?.foto)
+
+  const contacts = [
+    { icon: MapPin, label: profile?.alamat || BUSINESS_AREA },
+    wa && { icon: MessageCircle, label: phone, href: wa, external: true },
+    email && { icon: Mail, label: email, href: `mailto:${email}` },
+    socials && { icon: InstagramIcon, label: socialLabel(socials), href: socials, external: true },
+  ].filter(Boolean)
 
   return (
-    <div className="wrapper pt-[133px] pb-[100px] max-md:pt-[105px]">
-      <div className="relative h-[390px] overflow-hidden rounded-[10px] max-md:h-[260px]">
-        {coverImg && <img className="size-full object-cover" src={coverImg} alt={name} />}
-        <div className="absolute inset-0 flex items-end bg-[linear-gradient(transparent,#18231eaa)] p-[42px] max-md:p-6">
-          <h1 className="text-[58px] tracking-[-2px] text-white max-md:text-[36px]">{name}</h1>
-        </div>
-      </div>
-      <div className="grid grid-cols-[1.3fr_.7fr] gap-[100px] pt-[75px] max-lg:gap-10 max-md:grid-cols-1 max-md:gap-[35px] max-md:pt-[42px]">
+    <main>
+      <section className="wrapper grid gap-8 py-8 md:grid-cols-[1.4fr_1fr] md:gap-12 md:py-12">
         <div>
-          <p className="eyebrow">Tentang Kami</p>
-          <h2 className="display text-[44px]">Lebih dari sekadar <em className="accent">produk.</em></h2>
-          <p className={bodyText}>{description}</p>
-          <p className={bodyText}>Setiap pembelianmu adalah dukungan nyata untuk pelaku usaha lokal yang bekerja keras setiap hari.</p>
-        </div>
-        <div className="border-l border-line pl-[50px] max-md:border-t max-md:border-l-0 max-md:pt-[35px] max-md:pl-0">
-          <h3>Informasi Kontak</h3>
-          <ul className="text-[13px] leading-[2.8] text-muted [&_a]:underline [&_li]:flex [&_li]:gap-3">
-            <li><span>📍</span> {profile?.alamat || '-'}</li>
-            <li><span>📞</span> {wa ? <a href={wa}>{phone}</a> : '-'}</li>
-            <li><span>✉️</span> {email ? <a href={`mailto:${email}`}>{email}</a> : '-'}</li>
-            {socials && <li><span>🔗</span> <a href={socials} target="_blank" rel="noreferrer">{socials}</a></li>}
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Tentang {name}</h1>
+          {image && <img className="mt-6 aspect-[16/9] w-full rounded-2xl object-cover" src={image} alt={name} />}
+          <p className="mt-6 max-w-prose text-lg leading-relaxed text-muted">{profile?.deskripsi || BUSINESS_DESCRIPTION}</p>
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {FACTS.map(({ icon: Icon, label }) => (
+              <li key={label} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-sm">
+                <Icon className="size-4 text-brand" aria-hidden="true" /> {label}
+              </li>
+            ))}
           </ul>
         </div>
-      </div>
-    </div>
+        <aside className="h-fit rounded-2xl border border-line bg-white p-5 sm:p-6">
+          <h2 className="font-semibold">Kontak</h2>
+          <ul className="mt-4 space-y-3 text-sm">
+            {contacts.map(({ icon: Icon, label, href, external }) => {
+              const content = <><Icon className="size-4 shrink-0 text-brand" aria-hidden="true" /><span className="break-all">{label}</span></>
+              return (
+                <li key={label}>
+                  {href
+                    ? <a className="flex items-center gap-3 hover:underline" href={href} {...(external && { target: '_blank', rel: 'noopener noreferrer' })}>{content}</a>
+                    : <span className="flex items-center gap-3">{content}</span>}
+                </li>
+              )
+            })}
+          </ul>
+          {wa && (
+            <a className="btn btn-primary mt-6 w-full" href={wa} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="size-4" aria-hidden="true" /> Chat via WhatsApp
+            </a>
+          )}
+        </aside>
+      </section>
+      <OrderSteps />
+    </main>
   )
 }

@@ -50,23 +50,24 @@ src/
   pages/             halaman per route (Beranda, Produk, Detail, Tentang)
   components/
     layout/          Navbar, Footer, BottomTabBar
-    sections/        bagian beranda (Hero, ProductSlider)
-    ui/              ProductCard, ProductModal, LoadingState
+    sections/        bagian halaman (Hero, OrderSteps)
+    ui/              ProductGrid, ProductCard, ProductModal, EmptyState
     chat/            ChatBubble
   hooks/             useLandingData (fetch produk + profil)
   services/api.js    semua pemanggilan API
   utils/             format harga, tautan WhatsApp, validasi URL (+ test)
+  content.js         teks statis: nama usaha, fakta (Halal, NIB), langkah pemesanan
   index.css          Tailwind: token desain (@theme) dan class bersama
 ```
 
 ## Styling
 
-Styling memakai Tailwind CSS v4. Warna, font, dan breakpoint didefinisikan di `@theme` pada `src/index.css`. Layout ditulis desktop-first:
+Styling memakai Tailwind CSS v4. Warna dan font didefinisikan di `@theme` pada `src/index.css`. Layout ditulis mobile-first dengan breakpoint bawaan Tailwind:
 
-- `max-lg:` berlaku untuk layar ≤1000px (tablet)
-- `max-md:` berlaku untuk layar ≤760px (ponsel)
+- tanpa prefix: ponsel
+- `sm:` ≥640px, `md:` ≥768px (tablet, navbar penuh, tab bar bawah disembunyikan), `lg:` ≥1024px (PC)
 
-Pola yang dipakai di banyak tempat (`wrapper`, `eyebrow`, `display`, `accent`, `btn`, `text-link`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
+Ikon memakai `lucide-react`. Pola yang dipakai di banyak tempat (`wrapper`, `btn`, `btn-primary`, `btn-outline`, `skeleton`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
 
 ## Deployment
 

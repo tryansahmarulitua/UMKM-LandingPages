@@ -1,23 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* The layout is desktop-first: max-lg = ≤1000px (tablet), max-md = ≤760px (phone). */
-  --breakpoint-*: initial;
-  --breakpoint-md: 761px;
-  --breakpoint-lg: 1001px;
+  --color-paper: #fbf7f0;
+  --color-ink: #2a1f17;
+  --color-muted: #6f6258;
+  --color-line: #eadfd2;
+  --color-mist: #f1e8dc;
+  --color-brand: #b4472c;
+  --color-brand-dark: #93391f;
+  --color-brand-soft: #f6e3da;
 
-  --color-ink: #18231e;
-  --color-muted: #68716b;
-  --color-cream: #f8f6f0;
-  --color-lime: #d7e96a;
-  --color-line: #e4e5dd;
-  --color-olive: #849247;
-  --color-leaf: #a8bd42;
-  --color-leaf-bright: #b4ce2d;
-  --color-mist: #e8e9e1;
-
-  --font-sans: 'DM Sans', sans-serif;
-  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
 
   --animate-shimmer: shimmer 1.4s ease infinite;
 
@@ -33,32 +26,32 @@
   }
 
   body {
-    @apply bg-cream font-sans text-ink;
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
   }
 }
 
 @layer components {
   .wrapper {
-    @apply mx-auto max-w-[1180px] px-7 max-lg:px-5 max-md:px-4;
-  }
-
-  .eyebrow {
-    @apply mb-[21px] text-[11px] font-bold tracking-[2px] text-olive uppercase;
-  }
-
-  .display {
-    @apply mb-[25px] text-[68px] leading-[1.04] font-semibold tracking-[-3px];
-  }
-
-  .accent {
-    @apply font-serif text-leaf;
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
   }
 
   .btn {
-    @apply inline-block rounded-[25px] bg-ink px-5 py-3.5 text-[13px] text-white;
+    @apply inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold whitespace-nowrap transition-colors;
   }
 
-  .text-link {
-    @apply border-b border-[#cdd1c6] pb-[5px] text-[13px];
+  .btn-primary {
+    @apply bg-brand text-white hover:bg-brand-dark;
+  }
+
+  .btn-outline {
+    @apply border border-line bg-white text-ink hover:border-ink;
+  }
+
+  .skeleton {
+    @apply animate-shimmer bg-[linear-gradient(90deg,#f1e8dc_25%,#f8f2e9_37%,#f1e8dc_63%)] bg-[length:400%_100%];
   }
 }

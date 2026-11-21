@@ -1,40 +1,46 @@
+import { Store } from 'lucide-react'
 import { assetUrl } from '../../services/api'
-import { formatPrice } from '../../utils/formatters'
+import { categoryName, formatPrice } from '../../utils/formatters'
 import { orderLink } from '../../utils/whatsapp'
-import CategoryBadge from './CategoryBadge'
+
+export function ProductImage({ product, className = '' }) {
+  const image = assetUrl(product.foto)
+  return (
+    <div className={`grid aspect-square place-items-center overflow-hidden bg-mist ${className}`}>
+      {image
+        ? <img className="size-full object-cover" src={image} alt={product.namaProduk} loading="lazy" decoding="async" />
+        : <Store className="size-10 text-muted/40" aria-hidden="true" />}
+    </div>
+  )
+}
 
 export default function ProductCard({ product, phone, onSelect }) {
-  const name = product.namaProduk
-  const image = assetUrl(product.foto)
-  const order = orderLink(phone, name)
+  const order = orderLink(phone, product.namaProduk)
 
   return (
-    <article
-      className="relative cursor-pointer overflow-hidden rounded-lg bg-white transition-[translate,box-shadow] duration-200 ease-[ease] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_#18231e12]"
-      onClick={() => onSelect?.(product)}
-    >
-      <div className="group">
-        <div className="relative h-[220px] overflow-hidden bg-mist max-md:h-[230px]">
-          {image && <img className="size-full object-cover" src={image} alt={name} loading="lazy" decoding="async" />}
-          <CategoryBadge product={product} />
+    <article className="flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-shadow hover:shadow-md">
+      <button type="button" className="group flex flex-1 cursor-pointer flex-col text-left" onClick={() => onSelect(product)}>
+        <ProductImage product={product} className="[&_img]:transition-transform [&_img]:duration-300 group-hover:[&_img]:scale-[1.03]" />
+        <div className="flex flex-1 flex-col px-3 pt-3 sm:px-4 sm:pt-4">
+          <p className="text-xs text-muted">{categoryName(product)}</p>
+          <h3 className="mt-0.5 line-clamp-2 text-[15px] leading-snug font-semibold">{product.namaProduk}</h3>
+          {product.deskripsi && <p className="mt-1 line-clamp-2 text-sm text-muted max-sm:hidden">{product.deskripsi}</p>}
         </div>
-        <div className="px-[18px] pt-[17px] pb-[19px]">
-          <h3 className="mb-[7px] text-[16px] font-medium group-hover:underline">{name}</h3>
-          <p className="h-[34px] min-h-5 text-[11px] leading-[1.5] text-muted">{product.deskripsi}</p>
-          <div className="absolute inset-x-[22px] bottom-[22px] mt-4 flex items-end justify-between max-md:inset-x-[18px]">
-            <strong className="text-[14px]">{formatPrice(product.harga)}</strong>
-          </div>
-        </div>
+      </button>
+      <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
+        <strong className="text-[15px]">{formatPrice(product.harga)}</strong>
+        {order && (
+          <a
+            className="inline-flex h-9 items-center rounded-full bg-brand-soft px-3.5 text-sm font-semibold text-brand transition-colors hover:bg-brand hover:text-white"
+            href={order}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Pesan ${product.namaProduk} via WhatsApp`}
+          >
+            Pesan
+          </a>
+        )}
       </div>
-      {order && (
-        <a
-          className="absolute right-[22px] bottom-[22px] text-[13px] font-bold max-md:right-[18px]"
-          href={order}
-          onClick={(event) => event.stopPropagation()}
-        >
-          Pesan <span>↗</span>
-        </a>
-      )}
     </article>
   )
 }

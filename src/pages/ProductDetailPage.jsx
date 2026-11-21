@@ -1,40 +1,62 @@
 import { Link, useParams } from 'react-router-dom'
-import { assetUrl } from '../services/api'
-import { BUSINESS_NAME, categoryName, formatPrice } from '../utils/formatters'
+import { ArrowLeft, MessageCircle } from 'lucide-react'
+import { ProductImage } from '../components/ui/ProductCard'
+import EmptyState from '../components/ui/EmptyState'
+import { categoryName, formatPrice } from '../utils/formatters'
 import { orderLink } from '../utils/whatsapp'
 
-const page = 'wrapper pt-[133px] pb-[100px] max-md:pt-[105px]'
+const backLink = (
+  <Link className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink" to="/produk">
+    <ArrowLeft className="size-4" aria-hidden="true" /> Kembali ke katalog
+  </Link>
+)
 
-export default function ProductDetailPage({ products = [], phone }) {
+export default function ProductDetailPage({ products = [], phone, loading = false }) {
   const { id } = useParams()
   const product = products.find((item) => String(item.idProduk) === id)
 
-  if (!product) {
+  if (loading) {
     return (
-      <main className={page}>
-        <p>Produk tidak ditemukan.</p>
-        <Link className="btn" to="/produk">Kembali ke produk</Link>
+      <main className="wrapper py-8 md:py-12" role="status" aria-label="Memuat produk...">
+        <div className="grid gap-6 md:grid-cols-2 md:gap-12">
+          <div className="skeleton aspect-square rounded-2xl" />
+          <div className="space-y-4">
+            <div className="skeleton h-4 w-1/4 rounded" />
+            <div className="skeleton h-8 w-2/3 rounded" />
+            <div className="skeleton h-6 w-1/3 rounded" />
+          </div>
+        </div>
       </main>
     )
   }
 
-  const name = product.namaProduk
-  const image = assetUrl(product.foto)
-  const order = orderLink(phone, name)
+  if (!product) {
+    return (
+      <main className="wrapper space-y-6 py-8 md:py-12">
+        {backLink}
+        <EmptyState>Produk tidak ditemukan.</EmptyState>
+      </main>
+    )
+  }
+
+  const order = orderLink(phone, product.namaProduk)
 
   return (
-    <main className={page}>
-      <Link className="mb-7 inline-block text-[13px] text-muted" to="/produk">← Kembali ke produk</Link>
-      <article className="grid grid-cols-2 gap-[70px] overflow-hidden rounded-[10px] bg-white max-md:grid-cols-1 max-md:gap-0">
-        <div className="min-h-[480px] bg-mist max-md:min-h-[280px]">
-          {image && <img className="size-full object-cover" src={image} alt={name} />}
-        </div>
-        <div className="flex flex-col items-start px-[55px] py-[60px] max-md:px-[22px] max-md:py-[30px]">
-          <p className="eyebrow">{categoryName(product)}</p>
-          <h1 className="mb-5 text-[52px] tracking-[-2px] max-md:text-[38px]">{name}</h1>
-          <p className="leading-[1.7] text-muted">{product.deskripsi || `Produk pilihan ${BUSINESS_NAME}.`}</p>
-          <strong className="my-[25px] text-[22px]">{formatPrice(product.harga)}</strong>
-          {order && <a className="btn" href={order}>Pesan sekarang <span>↗</span></a>}
+    <main className="wrapper py-8 md:py-12">
+      {backLink}
+      <article className="mt-6 grid gap-6 md:grid-cols-2 md:gap-12">
+        <ProductImage product={product} className="rounded-2xl border border-line" />
+        <div>
+          <p className="text-sm text-muted">{categoryName(product)}</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">{product.namaProduk}</h1>
+          <p className="mt-3 text-2xl font-bold">{formatPrice(product.harga)}</p>
+          {product.deskripsi && <p className="mt-5 max-w-prose leading-relaxed text-muted">{product.deskripsi}</p>}
+          {order && (
+            <a className="btn btn-primary mt-8 w-full sm:w-auto" href={order} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="size-4" aria-hidden="true" /> Pesan via WhatsApp
+            </a>
+          )}
+          <p className="mt-4 text-sm text-muted">Ongkos kirim dan ketersediaan dikonfirmasi lewat WhatsApp.</p>
         </div>
       </article>
     </main>
