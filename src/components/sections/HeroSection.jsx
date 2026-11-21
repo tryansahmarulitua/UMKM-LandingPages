@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../../services/api'
+import { BUSINESS_NAME } from '../../utils/formatters'
 import LoadingState from '../ui/LoadingState'
 
 export default function HeroSection({ profile, loading }) {
-  const title = profile?.namaUMKM || 'Jatisampurna'
-  const description = profile?.deskripsi || 'Temukan produk pilihan dari UMKM Jatisampurna. Dibuat dengan bahan terbaik, ketulusan, dan cerita di setiap gigitannya.'
+  const title = profile?.namaUMKM || BUSINESS_NAME
+  const description = profile?.deskripsi || 'Abon, keripik, kue kering, dan camilan rumahan. Dibuat dengan bahan terbaik dan cerita di setiap gigitannya.'
   const coverImg = assetUrl(profile?.foto)
 
   return (
@@ -25,7 +26,9 @@ export default function HeroSection({ profile, loading }) {
       </div>
       <div className="hero-visual">
         <div className="hero-image">
-          {loading && !coverImg ? <LoadingState type="hero-image" /> : coverImg && <img src={coverImg} alt={`Cover ${title}`} />}
+          {loading && !coverImg
+            ? <LoadingState type="hero-image" />
+            : coverImg && <img src={coverImg} alt={`Cover ${title}`} />}
         </div>
         <div className="stamp">DIBUAT<br /><strong>DENGAN</strong><br />HATI <span>✦</span></div>
         <div className="floating-note">Pilihan<br /><strong>favoritmu</strong> ada di sini <span>♡</span></div>
