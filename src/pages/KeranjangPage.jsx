@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react'
 import { ProductImage } from '../components/ui/ProductCard'
 import EmptyState from '../components/ui/EmptyState'
+import Turnstile from '../components/ui/Turnstile'
 import PesananBerhasil from '../components/order/PesananBerhasil'
 import { useKeranjang } from '../hooks/useKeranjang'
 import { createOrder } from '../services/api'
@@ -29,6 +30,9 @@ export default function KeranjangPage({ products, loading }) {
   const [mengirim, setMengirim] = useState(false)
   const [error, setError] = useState('')
   const [pesanan, setPesanan] = useState(pesananTersimpan)
+  const [token, setToken] = useState(null)
+  const [widgetKey, setWidgetKey] = useState(0)
+  const [website, setWebsite] = useState('') // honeypot, hidden from people
 
   const { baris, total } = rincianKeranjang(items, products)
 
@@ -43,12 +47,18 @@ export default function KeranjangPage({ products, loading }) {
       setError('Nomor WhatsApp tidak valid. Contoh: 081234567890.')
       return
     }
+    if (!token) {
+      setError('Selesaikan verifikasi keamanan dulu.')
+      return
+    }
     setMengirim(true)
     setError('')
     try {
       // Only IDs and quantities are sent; the server calculates every price and the total.
       const { ok, data } = await createOrder({
         ...form,
+        turnstile: token,
+        website,
         items: baris.map((row) => ({ idProduk: row.product.idProduk, jumlah: row.jumlah })),
       })
       if (!ok) {
@@ -63,6 +73,9 @@ export default function KeranjangPage({ products, loading }) {
       setError('Gagal menghubungi server. Periksa koneksi lalu coba lagi.')
     } finally {
       setMengirim(false)
+      // The token may have been used; get a fresh one for the next attempt.
+      setToken(null)
+      setWidgetKey((k) => k + 1)
     }
   }
 
@@ -133,12 +146,17 @@ export default function KeranjangPage({ products, loading }) {
               </div>
               {form.pengiriman === 'Dikirim' && <p className="mt-2 text-xs text-muted">Alamat dan ongkos kirim dikonfirmasi lewat WhatsApp setelah checkout.</p>}
             </fieldset>
+            <label className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+              Website
+              <input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} name="website" />
+            </label>
             <div className="flex items-center justify-between border-t border-line pt-4">
               <span className="text-muted">Total</span>
               <strong className="text-xl tabular-nums">{formatPrice(total)}</strong>
             </div>
             {error && <p className="rounded-lg bg-brand-soft px-3 py-2 text-sm text-brand-dark" role="alert">{error}</p>}
-            <button type="submit" className="btn btn-primary w-full" disabled={mengirim}>{mengirim ? 'Memproses...' : 'Buat pesanan'}</button>
+            <Turnstile key={widgetKey} onToken={setToken} />
+            <button type="submit" className="btn btn-primary w-full" disabled={mengirim || !token}>{mengirim ? 'Memproses...' : 'Buat pesanan'}</button>
             <p className="text-xs leading-relaxed text-muted">Pembayaran lewat transfer. Pesanan yang belum dibayar dalam 24 jam otomatis dibatalkan.</p>
           </form>
         </div>

@@ -30,6 +30,7 @@ npm run dev
 | Variabel       | Contoh                      | Keterangan              |
 | -------------- | --------------------------- | ----------------------- |
 | `VITE_API_URL` | `http://localhost:8000/api` | Alamat REST API Laravel |
+| `VITE_TURNSTILE_SITE_KEY` | (dari dashboard Cloudflare) | Site key Cloudflare Turnstile untuk chat dan checkout. Wajib di Vercel. Saat `npm run dev`, kalau kosong dipakai kunci uji Cloudflare yang selalu lolos. |
 
 Semua variabel `VITE_*` ikut masuk ke bundle JavaScript dan bisa dibaca siapa pun. Jangan pernah menaruh kunci Gemini atau password di sini; rahasia hanya disimpan di `.env` backend.
 
@@ -52,8 +53,9 @@ Pembeli menekan **+ Keranjang** di produk, lalu checkout di halaman `/keranjang`
 - Saat checkout, hanya ID dan jumlah yang dikirim. Harga, total, dan nomor pesanan dihitung API.
 - Setelah checkout, pembeli melihat nomor pesanan, ringkasan, rekening tujuan dari Pengaturan, dan tombol **Kirim ke WhatsApp** berisi pesan siap kirim. Untuk pesanan yang dikirim, pesan itu memuat baris alamat dan permintaan info ongkir. Halaman konfirmasi tetap ada kalau tab dimuat ulang (`sessionStorage`).
 - Batas jumlah sama dengan API: 1–50 per produk, maksimal 20 produk.
+- Checkout dilindungi Cloudflare Turnstile dan kolom honeypot tersembunyi. Token Turnstile hanya bisa dipakai sekali, jadi widget dimuat ulang setelah setiap percobaan. API membatasi 10 pesanan per jam per IP.
 
-Chatbot menjawab berdasarkan produk yang ditampilkan dan profil usaha. Jawaban berupa teks biasa, dan baris barunya ditampilkan apa adanya di bubble chat. Kalau pengunjung menanyakan rasa atau minta saran, produk yang direkomendasikan tampil sebagai kartu (foto, nama, harga, rasa) di bawah jawaban; datanya dari database, bukan dari AI. Kartu membuka halaman detail produk. Label rasa juga tampil di kartu katalog, modal, dan detail produk. Kalau asisten gagal atau batas harian habis, pengunjung diarahkan ke WhatsApp.
+Chatbot menjawab berdasarkan produk yang ditampilkan dan profil usaha. Jawaban berupa teks biasa, dan baris barunya ditampilkan apa adanya di bubble chat. Kalau pengunjung menanyakan rasa atau minta saran, produk yang direkomendasikan tampil sebagai kartu (foto, nama, harga, rasa) di bawah jawaban; datanya dari database, bukan dari AI. Kartu membuka halaman detail produk. Label rasa juga tampil di kartu katalog, modal, dan detail produk. Kalau asisten gagal atau batas harian habis, pengunjung diarahkan ke WhatsApp. Sebelum pesan pertama, pengunjung menyelesaikan verifikasi Turnstile; API lalu memberi tiket chat 1 jam yang hanya disimpan di memori, sehingga hilang saat halaman dimuat ulang.
 
 ## Struktur
 
