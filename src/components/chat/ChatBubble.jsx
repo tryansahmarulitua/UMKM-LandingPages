@@ -53,13 +53,15 @@ export default function ChatBubble({ phone }) {
     setLoading(true)
     startCooldown()
     try {
-      const res = await sendChat(text, history)
-      const data = await res.json()
-      setMessages((prev) => [...prev, res.ok
+      const { ok, data } = await sendChat(text, history)
+      setMessages((prev) => [...prev, ok
         ? { role: 'model', text: data.answer }
         : { role: 'model', text: data.message || 'Maaf, asisten sedang tidak bisa menjawab.', failed: true }])
-    } catch {
-      setMessages((prev) => [...prev, { role: 'model', text: 'Gagal menghubungi asisten.', failed: true }])
+    } catch (err) {
+      const reply = err.name === 'TimeoutError'
+        ? 'Asisten terlalu lama menjawab. Coba lagi sebentar lagi, atau tanya langsung lewat WhatsApp.'
+        : 'Gagal menghubungi asisten.'
+      setMessages((prev) => [...prev, { role: 'model', text: reply, failed: true }])
     } finally {
       setLoading(false)
     }
