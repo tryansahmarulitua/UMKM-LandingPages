@@ -12,10 +12,11 @@ import { useLandingData } from './hooks/useLandingData'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
-  // Braces matter: newer Chromium returns a Promise from scrollTo, and React would treat it as the cleanup.
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
   return null
 }
 
