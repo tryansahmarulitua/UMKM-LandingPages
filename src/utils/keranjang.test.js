@@ -48,11 +48,12 @@ describe('bacaKeranjang', () => {
 })
 
 describe('nomorWhatsAppValid', () => {
-  it.each(['081234567890', '0812-3456-7890', '+62 812 3456 7890', '6281234567890'])('accepts %s', (nomor) => {
+  it.each(['081234567890', '0812-3456-7890', '+62 812 3456 7890', '6281234567890', '0812-3456-7890-12'])('accepts %s', (nomor) => {
     expect(nomorWhatsAppValid(nomor)).toBe(true)
   })
 
-  it.each(['12345', '0212345678', '08', ''])('rejects %s', (nomor) => {
+  // The last two would be 16 digits once the API stores them as 62..., one more than its column holds.
+  it.each(['12345', '0212345678', '08', '', '6281234567890123', '0812-3456-7890-123'])('rejects %s', (nomor) => {
     expect(nomorWhatsAppValid(nomor)).toBe(false)
   })
 })

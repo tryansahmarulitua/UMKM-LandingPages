@@ -49,7 +49,7 @@ export function bacaKeranjang(teks) {
 }
 
 // Same rule as the API: an Indonesian mobile number (08... / 628... / +628...), spaces and dashes allowed.
-export const nomorWhatsAppValid = (nomor) => /^(\+62|62|0)[\s-]?8[1-9][0-9\s-]{6,14}$/.test(String(nomor ?? '').trim())
+export const nomorWhatsAppValid = (nomor) => /^(\+62|62|0)[\s-]?8[1-9](?:[\s-]?[0-9]){6,11}$/.test(String(nomor ?? '').trim())
 
 // Message the customer sends to the owner after checkout (Project Plan §1.1).
 export function pesanWhatsApp(pesanan) {
