@@ -6,7 +6,7 @@ Proyek PPPL — Creative Digital Squad.
 
 ## Kebutuhan
 
-- Node.js 20+
+- Node.js 20.19+ atau 22.12+ (CI memakai Node 24)
 - Backend Laravel yang berjalan (default `http://localhost:8000`)
 
 ## Menjalankan
@@ -21,7 +21,7 @@ npm run dev
 | ----------------- | ------------------------------ |
 | `npm run dev`     | Server pengembangan Vite       |
 | `npm run lint`    | ESLint                         |
-| `npm test`        | Unit test util (Vitest)        |
+| `npm test`        | Unit test (Vitest)             |
 | `npm run build`   | Build produksi ke `dist/`      |
 | `npm run preview` | Menjalankan hasil build lokal  |
 
@@ -31,7 +31,7 @@ npm run dev
 | -------------- | --------------------------- | ----------------------- |
 | `VITE_API_URL` | `http://localhost:8000/api` | Alamat REST API Laravel |
 
-Semua variabel `VITE_*` ikut masuk ke bundle JavaScript dan bisa dibaca siapa pun. Jangan pernah menaruh kunci Gemini, secret Turnstile, atau password di sini; rahasia hanya disimpan di `.env` backend.
+Semua variabel `VITE_*` ikut masuk ke bundle JavaScript dan bisa dibaca siapa pun. Jangan pernah menaruh kunci Gemini atau password di sini; rahasia hanya disimpan di `.env` backend.
 
 ## Endpoint yang dipakai
 
@@ -42,6 +42,8 @@ Semua variabel `VITE_*` ikut masuk ke bundle JavaScript dan bisa dibaca siapa pu
 | POST   | `/api/chat`          | Chatbot (`message`, `history`) |
 
 Foto produk dan profil dibaca dari `<BASE_URL>/storage/<path>`.
+
+Chatbot menjawab berdasarkan produk yang ditampilkan dan profil usaha. Jawaban berupa teks biasa, dan baris barunya ditampilkan apa adanya di bubble chat. Kalau asisten gagal atau batas harian habis, pengunjung diarahkan ke WhatsApp.
 
 ## Struktur
 
@@ -71,6 +73,12 @@ Styling memakai Tailwind CSS v4. Warna dan font didefinisikan di `@theme` pada `
 
 Ikon memakai `lucide-react`, kecuali logo Instagram (`InstagramIcon`, SVG sendiri) karena lucide tidak menyediakan logo merek. Pola yang dipakai di banyak tempat (`wrapper`, `btn`, `btn-primary`, `btn-outline`, `skeleton`) ada di `@layer components`. Sisanya ditulis sebagai utility langsung di komponen.
 
-## Deployment
+## Deploy
 
-`npm run build` menghasilkan `dist/`. Folder itu bisa diunggah ke hosting Apache (InfinityFree, PP §9): `public/.htaccess` ikut tersalin dan mengarahkan route seperti `/produk/3` ke `index.html`. `vercel.json` melakukan hal yang sama bila deploy ke Vercel.
+Produksi ada di Vercel (`umkm-bundariris.vercel.app`) dan otomatis deploy setiap ada push ke `main`. `VITE_API_URL` untuk produksi diatur di **Settings → Environment Variables** project Vercel. `vercel.json` mengarahkan route seperti `/produk/3` ke `index.html`. Domain landing page juga harus terdaftar di `config/cors.php` UMKM-API.
+
+Cadangan: `npm run build` menghasilkan `dist/` yang bisa diunggah ke hosting Apache (InfinityFree, PP §9). `public/.htaccess` ikut tersalin dan melakukan rewrite yang sama.
+
+## Pengecekan otomatis
+
+GitHub Actions (`.github/workflows/ci.yml`) menjalankan `npm ci`, `npm run lint`, `npm test`, dan `npm run build` di setiap PR dan setiap push ke `main`. Merge PR sebaiknya menunggu tanda hijau di tab **Checks**.
