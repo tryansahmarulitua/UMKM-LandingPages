@@ -2,7 +2,7 @@ import { Store } from 'lucide-react'
 import { assetUrl } from '../../services/api'
 import { categoryName, formatPrice } from '../../utils/formatters'
 import FlavourTags from './FlavourTags'
-import { orderLink } from '../../utils/whatsapp'
+import AddToCartButton from './AddToCartButton'
 
 export function ProductImage({ product, className = '' }) {
   const image = assetUrl(product.foto)
@@ -15,9 +15,7 @@ export function ProductImage({ product, className = '' }) {
   )
 }
 
-export default function ProductCard({ product, phone, onSelect }) {
-  const order = orderLink(phone, product.namaProduk)
-
+export default function ProductCard({ product, onSelect }) {
   return (
     // The title button stretches over the whole card (after:inset-0), so a heading is never nested inside a button.
     <article className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-shadow hover:shadow-md">
@@ -32,19 +30,13 @@ export default function ProductCard({ product, phone, onSelect }) {
         <FlavourTags product={product} className="mt-1.5" />
         {product.deskripsi && <p className="mt-1 line-clamp-2 text-sm text-muted max-sm:hidden">{product.deskripsi}</p>}
       </div>
-      <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 p-3 sm:p-4">
         <strong className="text-[15px]">{formatPrice(product.harga)}</strong>
-        {order && (
-          <a
-            className="relative z-10 inline-flex h-9 items-center rounded-full bg-brand-soft px-3.5 text-sm font-semibold text-brand transition-colors hover:bg-brand hover:text-white"
-            href={order}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Pesan ${product.namaProduk} lewat WhatsApp`}
-          >
-            Pesan
-          </a>
-        )}
+        <AddToCartButton
+          product={product}
+          label="+ Keranjang"
+          className="relative z-10 inline-flex h-9 cursor-pointer items-center gap-1 rounded-full bg-brand-soft px-3 text-sm font-semibold whitespace-nowrap text-brand transition-colors hover:bg-brand hover:text-white"
+        />
       </div>
     </article>
   )

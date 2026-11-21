@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { MessageCircle, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { categoryName, formatPrice } from '../../utils/formatters'
-import { orderLink } from '../../utils/whatsapp'
+import AddToCartButton from './AddToCartButton'
 import { ProductImage } from './ProductCard'
 import FlavourTags from './FlavourTags'
 
-export default function ProductModal({ product, phone, onClose }) {
+export default function ProductModal({ product, onClose }) {
   useEffect(() => {
     if (!product) return
     const closeOnEscape = (event) => event.key === 'Escape' && onClose()
@@ -19,7 +19,6 @@ export default function ProductModal({ product, phone, onClose }) {
   }, [product, onClose])
 
   if (!product) return null
-  const order = orderLink(phone, product.namaProduk)
 
   return (
     <div className="fixed inset-0 z-60 flex items-end justify-center bg-ink/50 sm:items-center sm:p-6" onClick={onClose}>
@@ -45,11 +44,7 @@ export default function ProductModal({ product, phone, onClose }) {
           <FlavourTags product={product} className="mt-3" />
           {product.deskripsi && <p className="mt-4 leading-relaxed text-muted">{product.deskripsi}</p>}
           <div className="mt-6 flex flex-col gap-3 sm:mt-auto sm:pt-6">
-            {order && (
-              <a className="btn btn-primary" href={order} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="size-4" aria-hidden="true" /> Pesan lewat WhatsApp
-              </a>
-            )}
+            <AddToCartButton product={product} label="Tambah ke keranjang" className="btn btn-primary" />
             <Link className="btn btn-outline" to={`/produk/${product.idProduk}`}>Lihat detail produk</Link>
           </div>
         </div>

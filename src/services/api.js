@@ -31,4 +31,14 @@ export async function sendChat(message, history, timeoutMs = CHAT_TIMEOUT_MS) {
   }
 }
 
+// Checkout. Returns the status and body, so validation messages from the API can be shown.
+export async function createOrder(order) {
+  const response = await fetch(`${API_URL}/pesanan`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify(order),
+  })
+  return { ok: response.ok, status: response.status, data: await response.json() }
+}
+
 export const assetUrl = (path) => (path ? `${BASE_URL}/storage/${path}` : null)

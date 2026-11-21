@@ -1,11 +1,11 @@
 import { Link, NavLink } from 'react-router-dom'
-import { MessageCircle } from 'lucide-react'
+import { ShoppingBag } from 'lucide-react'
 import { business, NAV_ITEMS } from '../../content'
-import { askLink } from '../../utils/whatsapp'
+import { useKeranjang } from '../../hooks/useKeranjang'
 
 export default function Navbar({ profile }) {
   const { name } = business(profile)
-  const wa = askLink(profile?.noTelepon)
+  const { jumlahBarang } = useKeranjang()
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
@@ -23,12 +23,11 @@ export default function Navbar({ profile }) {
             </NavLink>
           ))}
         </nav>
-        {wa && (
-          <a className="btn btn-primary max-sm:size-10 max-sm:px-0" href={wa} target="_blank" rel="noopener noreferrer" aria-label="Pesan lewat WhatsApp">
-            <MessageCircle className="size-4" aria-hidden="true" />
-            <span className="max-sm:hidden">Pesan lewat WhatsApp</span>
-          </a>
-        )}
+        <Link className="btn btn-primary relative max-md:hidden" to="/keranjang" aria-label={`Keranjang, ${jumlahBarang} barang`}>
+          <ShoppingBag className="size-4" aria-hidden="true" />
+          Keranjang
+          {jumlahBarang > 0 && <span className="grid h-5 min-w-5 place-items-center rounded-full bg-white px-1 text-xs font-bold text-brand">{jumlahBarang}</span>}
+        </Link>
       </div>
     </header>
   )

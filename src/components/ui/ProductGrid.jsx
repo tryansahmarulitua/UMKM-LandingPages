@@ -4,17 +4,17 @@ import ProductModal from './ProductModal'
 
 const GRID = 'grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 lg:grid-cols-4'
 
-export default function ProductGrid({ products, phone }) {
+export default function ProductGrid({ products }) {
   const [selected, setSelected] = useState(null)
 
   return (
     <>
       <div className={GRID}>
         {products.map((product) => (
-          <ProductCard key={product.idProduk} product={product} phone={phone} onSelect={setSelected} />
+          <ProductCard key={product.idProduk} product={product} onSelect={setSelected} />
         ))}
       </div>
-      <ProductModal product={selected} phone={phone} onClose={() => setSelected(null)} />
+      <ProductModal product={selected} onClose={() => setSelected(null)} />
     </>
   )
 }

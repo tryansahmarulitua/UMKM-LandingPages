@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { categoryName, flavourNames, formatPrice } from './formatters'
 import { httpUrl, socialLabel } from './url'
-import { askLink, orderLink, waLink } from './whatsapp'
+import { askLink, waLink } from './whatsapp'
 import { business } from '../content'
 
 describe('flavourNames', () => {
@@ -35,16 +35,6 @@ describe('waLink', () => {
     expect(waLink(undefined)).toBeNull()
     expect(waLink('')).toBeNull()
     expect(waLink('abc')).toBeNull()
-  })
-})
-
-describe('orderLink', () => {
-  it('prefills the order message with the product name', () => {
-    expect(orderLink('0812', 'Abon Sapi')).toBe('https://wa.me/62812?text=Halo%2C%20saya%20ingin%20memesan%20Abon%20Sapi')
-  })
-
-  it('returns null without a number', () => {
-    expect(orderLink(null, 'Abon Sapi')).toBeNull()
   })
 })
 
