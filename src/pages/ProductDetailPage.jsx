@@ -4,6 +4,7 @@ import { ProductImage } from '../components/ui/ProductCard'
 import EmptyState from '../components/ui/EmptyState'
 import { PRODUCTS_UNAVAILABLE } from '../content'
 import { categoryName, formatPrice } from '../utils/formatters'
+import FlavourTags from '../components/ui/FlavourTags'
 import { orderLink } from '../utils/whatsapp'
 
 const backLink = (
@@ -51,6 +52,7 @@ export default function ProductDetailPage({ products, loading, failed, phone }) 
           <p className="text-sm text-muted">{categoryName(product)}</p>
           <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">{product.namaProduk}</h1>
           <p className="mt-3 text-2xl font-bold">{formatPrice(product.harga)}</p>
+          <FlavourTags product={product} className="mt-3" />
           {product.deskripsi && <p className="mt-5 max-w-prose leading-relaxed text-muted">{product.deskripsi}</p>}
           {order && (
             <a className="btn btn-primary mt-8 w-full sm:w-auto" href={order} target="_blank" rel="noopener noreferrer">
