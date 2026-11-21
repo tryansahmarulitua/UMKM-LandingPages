@@ -1,15 +1,64 @@
 import { Link, useParams } from 'react-router-dom'
-import { assetUrl } from '../services/api'
-import { formatPrice } from '../utils/formatters'
-import { waLink } from '../utils/whatsapp'
+import { ArrowLeft, MessageCircle } from 'lucide-react'
+import { ProductImage } from '../components/ui/ProductCard'
+import EmptyState from '../components/ui/EmptyState'
+import { categoryName, formatPrice } from '../utils/formatters'
+import { orderLink } from '../utils/whatsapp'
 
-export default function ProductDetailPage({ products = [] }) {
+const backLink = (
+  <Link className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink" to="/produk">
+    <ArrowLeft className="size-4" aria-hidden="true" /> Kembali ke katalog
+  </Link>
+)
+
+export default function ProductDetailPage({ products = [], phone, loading = false }) {
   const { id } = useParams()
   const product = products.find((item) => String(item.idProduk) === id)
 
-  if (!product) return <main className="detail-page container"><p>Produk tidak ditemukan.</p><Link className="button button-dark" to="/produk">Kembali ke produk</Link></main>
+  if (loading) {
+    return (
+      <main className="wrapper py-8 md:py-12" role="status" aria-label="Memuat produk...">
+        <div className="grid gap-6 md:grid-cols-2 md:gap-12">
+          <div className="skeleton aspect-square rounded-2xl" />
+          <div className="space-y-4">
+            <div className="skeleton h-4 w-1/4 rounded" />
+            <div className="skeleton h-8 w-2/3 rounded" />
+            <div className="skeleton h-6 w-1/3 rounded" />
+          </div>
+        </div>
+      </main>
+    )
+  }
 
-  const image = assetUrl(product.foto)
-  const name = product.namaProduk
-  return <main className="detail-page container"><Link className="back-link" to="/produk">← Kembali ke produk</Link><article className="product-detail"><div className="product-detail-photo">{image && <img src={image} alt={name} />}</div><div className="product-detail-info"><p className="eyebrow">{product.kategori?.namaKategori || 'Produk'}</p><h1>{name}</h1><p>{product.deskripsi || 'Produk pilihan UMKM Jatisampurna.'}</p><strong className="product-detail-price">{formatPrice(product.harga)}</strong><a className="button button-dark" href={waLink(`Halo, saya ingin memesan ${name}`)}>Pesan sekarang <span>↗</span></a></div></article></main>
+  if (!product) {
+    return (
+      <main className="wrapper space-y-6 py-8 md:py-12">
+        {backLink}
+        <EmptyState>Produk tidak ditemukan.</EmptyState>
+      </main>
+    )
+  }
+
+  const order = orderLink(phone, product.namaProduk)
+
+  return (
+    <main className="wrapper py-8 md:py-12">
+      {backLink}
+      <article className="mt-6 grid gap-6 md:grid-cols-2 md:gap-12">
+        <ProductImage product={product} className="rounded-2xl border border-line" />
+        <div>
+          <p className="text-sm text-muted">{categoryName(product)}</p>
+          <h1 className="mt-1 text-3xl font-bold tracking-tight sm:text-4xl">{product.namaProduk}</h1>
+          <p className="mt-3 text-2xl font-bold">{formatPrice(product.harga)}</p>
+          {product.deskripsi && <p className="mt-5 max-w-prose leading-relaxed text-muted">{product.deskripsi}</p>}
+          {order && (
+            <a className="btn btn-primary mt-8 w-full sm:w-auto" href={order} target="_blank" rel="noopener noreferrer">
+              <MessageCircle className="size-4" aria-hidden="true" /> Pesan via WhatsApp
+            </a>
+          )}
+          <p className="mt-4 text-sm text-muted">Ongkos kirim dan ketersediaan dikonfirmasi lewat WhatsApp.</p>
+        </div>
+      </article>
+    </main>
+  )
 }
