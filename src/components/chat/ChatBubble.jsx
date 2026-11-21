@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { MessageCircle, SendHorizontal, X } from 'lucide-react'
 import { sendChat } from '../../services/api'
 import { askLink } from '../../utils/whatsapp'
+import ChatProductCard from './ChatProductCard'
 
 // Limits from Project Plan §4.5; the backend enforces them too.
 const MAX_LENGTH = 500
@@ -55,7 +56,7 @@ export default function ChatBubble({ phone }) {
     try {
       const { ok, data } = await sendChat(text, history)
       setMessages((prev) => [...prev, ok
-        ? { role: 'model', text: data.answer }
+        ? { role: 'model', text: data.answer, products: data.produk || [] }
         : { role: 'model', text: data.message || 'Maaf, asisten sedang tidak bisa menjawab.', failed: true }])
     } catch (err) {
       const reply = err.name === 'TimeoutError'
@@ -65,6 +66,11 @@ export default function ChatBubble({ phone }) {
     } finally {
       setLoading(false)
     }
+  }
+
+  // On phones the chat covers the page, so close it when a recommended product is opened.
+  function closeOnPhone() {
+    if (window.matchMedia('(max-width: 767px)').matches) setOpen(false)
   }
 
   return (
@@ -87,14 +93,21 @@ export default function ChatBubble({ phone }) {
           <p className="border-b border-line bg-brand-soft/60 px-4 py-2 text-xs leading-snug text-ink/80">Jangan tuliskan data pribadi seperti alamat atau nomor rekening di sini.</p>
           <div className="flex min-h-48 flex-1 flex-col gap-2.5 overflow-y-auto p-4 text-sm" ref={bodyRef} aria-live="polite">
             {messages.map((msg, i) => (
-              <div key={i} className={msg.role === 'user' ? userBubble : aiBubble}>
-                {msg.text}
-                {msg.failed && wa && (
-                  <a className="mt-2 flex items-center gap-1.5 font-semibold text-brand underline" href={wa} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="size-4" aria-hidden="true" /> Tanya lewat WhatsApp
-                  </a>
+              <Fragment key={i}>
+                <div className={msg.role === 'user' ? userBubble : aiBubble}>
+                  {msg.text}
+                  {msg.failed && wa && (
+                    <a className="mt-2 flex items-center gap-1.5 font-semibold text-brand underline" href={wa} target="_blank" rel="noopener noreferrer">
+                      <MessageCircle className="size-4" aria-hidden="true" /> Tanya lewat WhatsApp
+                    </a>
+                  )}
+                </div>
+                {msg.products?.length > 0 && (
+                  <div className="flex w-[85%] flex-col gap-2 self-start">
+                    {msg.products.map((product) => <ChatProductCard key={product.idProduk} product={product} onOpen={closeOnPhone} />)}
+                  </div>
                 )}
-              </div>
+              </Fragment>
             ))}
             {loading && <div className={`${aiBubble} text-muted`}>Mengetik…</div>}
           </div>

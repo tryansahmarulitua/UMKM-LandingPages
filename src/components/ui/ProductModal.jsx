@@ -4,6 +4,7 @@ import { MessageCircle, X } from 'lucide-react'
 import { categoryName, formatPrice } from '../../utils/formatters'
 import { orderLink } from '../../utils/whatsapp'
 import { ProductImage } from './ProductCard'
+import FlavourTags from './FlavourTags'
 
 export default function ProductModal({ product, phone, onClose }) {
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function ProductModal({ product, phone, onClose }) {
           <p className="text-sm text-muted">{categoryName(product)}</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight">{product.namaProduk}</h2>
           <p className="mt-2 text-xl font-bold">{formatPrice(product.harga)}</p>
+          <FlavourTags product={product} className="mt-3" />
           {product.deskripsi && <p className="mt-4 leading-relaxed text-muted">{product.deskripsi}</p>}
           <div className="mt-6 flex flex-col gap-3 sm:mt-auto sm:pt-6">
             {order && (

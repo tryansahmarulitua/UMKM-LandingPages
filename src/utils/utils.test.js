@@ -1,8 +1,19 @@
 import { describe, expect, it } from 'vitest'
-import { categoryName, formatPrice } from './formatters'
+import { categoryName, flavourNames, formatPrice } from './formatters'
 import { httpUrl, socialLabel } from './url'
 import { askLink, orderLink, waLink } from './whatsapp'
 import { business } from '../content'
+
+describe('flavourNames', () => {
+  it('reads flavour objects from the catalogue and plain names from chatbot cards', () => {
+    expect(flavourNames({ rasa: [{ idRasa: 1, namaRasa: 'Manis' }, { idRasa: 4, namaRasa: 'Pedas' }] })).toEqual(['Manis', 'Pedas'])
+    expect(flavourNames({ rasa: ['Gurih'] })).toEqual(['Gurih'])
+  })
+
+  it('returns an empty list when the product has no flavours', () => {
+    expect(flavourNames({})).toEqual([])
+  })
+})
 
 describe('waLink', () => {
   it('keeps only digits of the number and encodes the message', () => {

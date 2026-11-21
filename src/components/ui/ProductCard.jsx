@@ -1,6 +1,7 @@
 import { Store } from 'lucide-react'
 import { assetUrl } from '../../services/api'
 import { categoryName, formatPrice } from '../../utils/formatters'
+import FlavourTags from './FlavourTags'
 import { orderLink } from '../../utils/whatsapp'
 
 export function ProductImage({ product, className = '' }) {
@@ -28,6 +29,7 @@ export default function ProductCard({ product, phone, onSelect }) {
             <span className="line-clamp-2">{product.namaProduk}</span>
           </button>
         </h3>
+        <FlavourTags product={product} className="mt-1.5" />
         {product.deskripsi && <p className="mt-1 line-clamp-2 text-sm text-muted max-sm:hidden">{product.deskripsi}</p>}
       </div>
       <div className="flex items-center justify-between gap-2 p-3 sm:p-4">

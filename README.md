@@ -43,7 +43,7 @@ Semua variabel `VITE_*` ikut masuk ke bundle JavaScript dan bisa dibaca siapa pu
 
 Foto produk dan profil dibaca dari `<BASE_URL>/storage/<path>`.
 
-Chatbot menjawab berdasarkan produk yang ditampilkan dan profil usaha. Jawaban berupa teks biasa, dan baris barunya ditampilkan apa adanya di bubble chat. Kalau asisten gagal atau batas harian habis, pengunjung diarahkan ke WhatsApp.
+Chatbot menjawab berdasarkan produk yang ditampilkan dan profil usaha. Jawaban berupa teks biasa, dan baris barunya ditampilkan apa adanya di bubble chat. Kalau pengunjung menanyakan rasa atau minta saran, produk yang direkomendasikan tampil sebagai kartu (foto, nama, harga, rasa) di bawah jawaban; datanya dari database, bukan dari AI. Kartu membuka halaman detail produk. Label rasa juga tampil di kartu katalog, modal, dan detail produk. Kalau asisten gagal atau batas harian habis, pengunjung diarahkan ke WhatsApp.
 
 ## Struktur
 
