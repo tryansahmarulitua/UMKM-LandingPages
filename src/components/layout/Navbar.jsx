@@ -1,11 +1,11 @@
 import { Link, NavLink } from 'react-router-dom'
 import { MessageCircle } from 'lucide-react'
-import { BUSINESS_NAME, NAV_ITEMS } from '../../content'
-import { waLink } from '../../utils/whatsapp'
+import { business, NAV_ITEMS } from '../../content'
+import { askLink } from '../../utils/whatsapp'
 
 export default function Navbar({ profile }) {
-  const name = profile?.namaUMKM || BUSINESS_NAME
-  const wa = waLink(profile?.noTelepon, 'Halo, saya ingin bertanya tentang produk')
+  const { name } = business(profile)
+  const wa = askLink(profile?.noTelepon)
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
@@ -24,9 +24,9 @@ export default function Navbar({ profile }) {
           ))}
         </nav>
         {wa && (
-          <a className="btn btn-primary max-sm:size-10 max-sm:px-0" href={wa} target="_blank" rel="noopener noreferrer" aria-label="Pesan via WhatsApp">
+          <a className="btn btn-primary max-sm:size-10 max-sm:px-0" href={wa} target="_blank" rel="noopener noreferrer" aria-label="Pesan lewat WhatsApp">
             <MessageCircle className="size-4" aria-hidden="true" />
-            <span className="max-sm:hidden">Pesan via WhatsApp</span>
+            <span className="max-sm:hidden">Pesan lewat WhatsApp</span>
           </a>
         )}
       </div>

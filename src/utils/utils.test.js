@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { categoryName, formatPrice } from './formatters'
 import { httpUrl, socialLabel } from './url'
-import { orderLink, waLink } from './whatsapp'
+import { askLink, orderLink, waLink } from './whatsapp'
+import { business } from '../content'
 
 describe('waLink', () => {
   it('keeps only digits of the number and encodes the message', () => {
@@ -71,5 +72,23 @@ describe('socialLabel', () => {
 
   it('falls back to the domain for other sites', () => {
     expect(socialLabel('https://tiktok.com/@bundariris')).toBe('tiktok.com')
+  })
+})
+
+describe('askLink', () => {
+  it('opens WhatsApp with the same greeting everywhere', () => {
+    expect(askLink('0812')).toBe('https://wa.me/62812?text=Halo%2C%20saya%20ingin%20bertanya%20tentang%20produk')
+  })
+})
+
+describe('business', () => {
+  it('prefers the profile from the API', () => {
+    expect(business({ namaUMKM: 'Bunda', alamat: 'Bekasi', deskripsi: 'Camilan' })).toEqual({ name: 'Bunda', area: 'Bekasi', description: 'Camilan' })
+  })
+
+  it('falls back to the static content when the profile is missing or empty', () => {
+    const fallback = business(null)
+    expect(fallback.name).toBe('Menu Sedap ala Bunda Riris')
+    expect(business({ namaUMKM: '', alamat: null })).toEqual(fallback)
   })
 })

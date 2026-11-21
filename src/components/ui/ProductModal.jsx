@@ -45,7 +45,7 @@ export default function ProductModal({ product, phone, onClose }) {
           <div className="mt-6 flex flex-col gap-3 sm:mt-auto sm:pt-6">
             {order && (
               <a className="btn btn-primary" href={order} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="size-4" aria-hidden="true" /> Pesan via WhatsApp
+                <MessageCircle className="size-4" aria-hidden="true" /> Pesan lewat WhatsApp
               </a>
             )}
             <Link className="btn btn-outline" to={`/produk/${product.idProduk}`}>Lihat detail produk</Link>

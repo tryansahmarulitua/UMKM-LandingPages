@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MessageCircle, SendHorizontal, X } from 'lucide-react'
 import { sendChat } from '../../services/api'
-import { waLink } from '../../utils/whatsapp'
+import { askLink } from '../../utils/whatsapp'
 
 // Limits from Project Plan §4.5; the backend enforces them too.
 const MAX_LENGTH = 500
@@ -22,7 +22,7 @@ export default function ChatBubble({ phone }) {
   const bodyRef = useRef(null)
   const inputRef = useRef(null)
   const cooldownTimer = useRef(null)
-  const wa = waLink(phone, 'Halo, saya ingin bertanya tentang produk')
+  const wa = askLink(phone)
 
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight

@@ -2,20 +2,20 @@ import { Mail, MapPin, MessageCircle } from 'lucide-react'
 import OrderSteps from '../components/sections/OrderSteps'
 import InstagramIcon from '../components/ui/InstagramIcon'
 import { assetUrl } from '../services/api'
-import { BUSINESS_AREA, BUSINESS_DESCRIPTION, BUSINESS_NAME, FACTS } from '../content'
+import { business, FACTS } from '../content'
 import { httpUrl, socialLabel } from '../utils/url'
-import { waLink } from '../utils/whatsapp'
+import { askLink } from '../utils/whatsapp'
 
 export default function AboutPage({ profile }) {
-  const name = profile?.namaUMKM || BUSINESS_NAME
+  const { name, area, description } = business(profile)
   const phone = profile?.noTelepon
-  const wa = waLink(phone, `Halo ${name}, saya ingin bertanya`)
+  const wa = askLink(phone)
   const email = profile?.email
   const socials = httpUrl(profile?.mediaSosial)
   const image = assetUrl(profile?.foto)
 
   const contacts = [
-    { icon: MapPin, label: profile?.alamat || BUSINESS_AREA },
+    { icon: MapPin, label: area },
     wa && { icon: MessageCircle, label: phone, href: wa, external: true },
     email && { icon: Mail, label: email, href: `mailto:${email}` },
     socials && { icon: InstagramIcon, label: socialLabel(socials), href: socials, external: true },
@@ -27,7 +27,7 @@ export default function AboutPage({ profile }) {
         <div>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Tentang {name}</h1>
           {image && <img className="mt-6 aspect-[16/9] w-full rounded-2xl object-cover" src={image} alt={name} />}
-          <p className="mt-6 max-w-prose text-lg leading-relaxed text-muted">{profile?.deskripsi || BUSINESS_DESCRIPTION}</p>
+          <p className="mt-6 max-w-prose text-lg leading-relaxed text-muted">{description}</p>
           <ul className="mt-6 flex flex-wrap gap-2">
             {FACTS.map(({ icon: Icon, label }) => (
               <li key={label} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-sm">
@@ -52,7 +52,7 @@ export default function AboutPage({ profile }) {
           </ul>
           {wa && (
             <a className="btn btn-primary mt-6 w-full" href={wa} target="_blank" rel="noopener noreferrer">
-              <MessageCircle className="size-4" aria-hidden="true" /> Chat via WhatsApp
+              <MessageCircle className="size-4" aria-hidden="true" /> Tanya lewat WhatsApp
             </a>
           )}
         </aside>

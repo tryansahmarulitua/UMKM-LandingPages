@@ -6,4 +6,6 @@ export function waLink(phone, message = '') {
   return `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`
 }
 
+export const askLink = (phone) => waLink(phone, 'Halo, saya ingin bertanya tentang produk')
+
 export const orderLink = (phone, productName) => waLink(phone, `Halo, saya ingin memesan ${productName}`)

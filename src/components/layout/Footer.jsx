@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Mail, MessageCircle } from 'lucide-react'
-import { BUSINESS_AREA, BUSINESS_NAME, NAV_ITEMS } from '../../content'
+import { business, NAV_ITEMS } from '../../content'
 import { httpUrl, socialLabel } from '../../utils/url'
 import { waLink } from '../../utils/whatsapp'
 import InstagramIcon from '../ui/InstagramIcon'
 
 export default function Footer({ profile }) {
-  const name = profile?.namaUMKM || BUSINESS_NAME
+  const { name, description } = business(profile)
   const phone = profile?.noTelepon
   const wa = waLink(phone)
   const email = profile?.email
@@ -17,7 +17,7 @@ export default function Footer({ profile }) {
       <div className="wrapper grid gap-8 py-10 md:grid-cols-[1.5fr_1fr_1fr]">
         <div>
           <p className="text-lg font-bold text-white">{name}</p>
-          <p className="mt-2 max-w-xs">Camilan rumahan dari {profile?.alamat || BUSINESS_AREA}.</p>
+          <p className="mt-2 line-clamp-3 max-w-xs">{description}</p>
         </div>
         <div>
           <h2 className="font-semibold text-white">Kontak</h2>

@@ -52,6 +52,6 @@
   }
 
   .skeleton {
-    @apply animate-shimmer bg-[linear-gradient(90deg,#f1e8dc_25%,#f8f2e9_37%,#f1e8dc_63%)] bg-[length:400%_100%];
+    @apply animate-shimmer bg-[linear-gradient(90deg,var(--color-mist)_25%,#f8f2e9_37%,var(--color-mist)_63%)] bg-[length:400%_100%];
   }
 }
