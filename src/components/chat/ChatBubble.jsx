@@ -1,8 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { MessageCircle, SendHorizontal, X } from 'lucide-react'
 import { sendChat } from '../../services/api'
 import { askLink } from '../../utils/whatsapp'
 import ChatProductCard from './ChatProductCard'
+import TurnstileWidget from '../security/TurnstileWidget'
 
 // Limits from Project Plan §4.5; the backend enforces them too.
 const MAX_LENGTH = 500
@@ -20,6 +21,8 @@ export default function ChatBubble({ phone }) {
   const [messages, setMessages] = useState([WELCOME])
   const [loading, setLoading] = useState(false)
   const [coolingDown, setCoolingDown] = useState(false)
+  const [turnstile, setTurnstile] = useState(null)
+  const [ticket, setTicket] = useState(null)
   const bodyRef = useRef(null)
   const inputRef = useRef(null)
   const cooldownTimer = useRef(null)
@@ -34,6 +37,8 @@ export default function ChatBubble({ phone }) {
   }, [open])
 
   useEffect(() => () => clearTimeout(cooldownTimer.current), [])
+
+  const handleTurnstile = useCallback((token) => setTurnstile(token), [])
 
   function startCooldown() {
     setCoolingDown(true)
@@ -54,7 +59,9 @@ export default function ChatBubble({ phone }) {
     setLoading(true)
     startCooldown()
     try {
-      const { ok, data } = await sendChat(text, history)
+      const { ok, data } = await sendChat(text, history, turnstile, ticket)
+      if (data.tiket) setTicket(data.tiket)
+      setTurnstile(null)
       setMessages((prev) => [...prev, ok
         ? { role: 'model', text: data.answer, products: data.produk || [] }
         : { role: 'model', text: data.message || 'Maaf, asisten sedang tidak bisa menjawab.', failed: true }])
@@ -111,6 +118,9 @@ export default function ChatBubble({ phone }) {
             ))}
             {loading && <div className={`${aiBubble} text-muted`}>Mengetik…</div>}
           </div>
+          {!ticket && <div className="border-t border-line bg-white px-3 pt-3">
+            <TurnstileWidget onToken={handleTurnstile} />
+          </div>}
           <form className="flex gap-2 border-t border-line bg-white p-3" onSubmit={send}>
             <input
               ref={inputRef}
@@ -126,7 +136,7 @@ export default function ChatBubble({ phone }) {
               className="grid size-11 shrink-0 cursor-pointer place-items-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
               type="submit"
               aria-label="Kirim"
-              disabled={loading || coolingDown || !input.trim()}
+              disabled={loading || coolingDown || !input.trim() || (!ticket && !turnstile)}
             >
               <SendHorizontal className="size-5" aria-hidden="true" />
             </button>
