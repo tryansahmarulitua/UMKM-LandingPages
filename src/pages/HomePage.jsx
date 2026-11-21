@@ -4,10 +4,11 @@ import HeroSection from '../components/sections/HeroSection'
 import OrderSteps from '../components/sections/OrderSteps'
 import EmptyState from '../components/ui/EmptyState'
 import ProductGrid, { ProductGridSkeleton } from '../components/ui/ProductGrid'
+import { PRODUCTS_UNAVAILABLE } from '../content'
 
 const FEATURED_COUNT = 8
 
-export default function HomePage({ profile, products = [], loading = false, phone }) {
+export default function HomePage({ profile, products, loading, failed, phone }) {
   return (
     <main>
       <HeroSection profile={profile} loading={loading} />
@@ -22,7 +23,7 @@ export default function HomePage({ profile, products = [], loading = false, phon
           ? <ProductGridSkeleton count={4} />
           : products.length > 0
             ? <ProductGrid products={products.slice(0, FEATURED_COUNT)} phone={phone} />
-            : <EmptyState>Belum ada produk yang ditampilkan.</EmptyState>}
+            : <EmptyState>{failed ? PRODUCTS_UNAVAILABLE : 'Belum ada produk yang ditampilkan.'}</EmptyState>}
       </section>
       <OrderSteps />
     </main>
